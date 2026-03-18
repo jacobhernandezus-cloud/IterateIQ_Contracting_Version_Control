@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>H9 Partners — Contract Management Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Arial',sans-serif}
+body{background:#FAF8F4;color:#1E1E1E}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ────────────────────────────────────────────────────── */
+.sidebar{width:238px;min-width:238px;background:#142338;display:flex;flex-direction:column;overflow-y:auto}
+.sb-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.5px;font-family:'Geologica',sans-serif}
+.sb-logo span{color:#FF8C00}
+.sb-tag{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
+.sb-section{padding:18px 0 6px}
+.sb-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.13em;padding:0 20px 5px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;border-left:3px solid transparent;transition:all .14s;user-select:none}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.05)}
+.nav-item.active{color:#fff;background:rgba(255,140,0,.14);border-left-color:#FF8C00;font-weight:600}
+.nav-badge{margin-left:auto;background:rgba(255,140,0,.22);color:#FFB84D;font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px}
+.nav-badge-blue{background:rgba(14,165,233,.2);color:#7dd3fc}
+.sb-divider{height:1px;background:rgba(255,255,255,.07);margin:8px 20px}
+.contract-nav-item{display:flex;align-items:center;gap:8px;padding:8px 20px;font-size:12px;color:rgba(255,255,255,.45);cursor:pointer;transition:all .14s;user-select:none;border-left:3px solid transparent}
+.contract-nav-item:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.04)}
+.contract-nav-item.active{color:#fff;border-left-color:#0ea5e9;background:rgba(14,165,233,.1);font-weight:600}
+.cn-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.07);margin-top:auto}
+.user-row{display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FF8C00,#142338);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:600;color:#fff}
+.user-role{font-size:10px;color:rgba(255,255,255,.38)}
+.online-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;margin-left:auto;flex-shrink:0;box-shadow:0 0 6px #22c55e}
+
+/* ── MAIN ───────────────────────────────────────────────────────── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 28px;background:#fff;border-bottom:1px solid #E8ECF0;position:sticky;top:0;z-index:10;gap:12px}
+.topbar-title{font-size:17px;font-weight:700;color:#1a1a2e}
+.topbar-sub{font-size:11px;color:#9CA3AF;margin-top:2px}
+.content{padding:22px 28px;flex:1}
+
+/* ── BUTTONS ────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;border:none;transition:all .14s;cursor:pointer;white-space:nowrap;line-height:1}
+.btn-primary{background:#14A800;color:#fff}.btn-primary:hover{background:#0d8f00}
+.btn-outline{background:#fff;color:#374151;border:1.5px solid #DEE3EB}.btn-outline:hover{background:#F8FAFC;border-color:#CBD5E1}
+.btn-blue{background:#0ea5e9;color:#fff}.btn-blue:hover{background:#0284c7}
+.btn-danger{background:#fee2e2;color:#dc2626;border:none}.btn-danger:hover{background:#fecaca}
+.btn-sm{padding:6px 13px;font-size:12px;border-radius:7px}
+.btn-ghost{background:none;border:none;color:#9CA3AF;padding:4px 7px;cursor:pointer;font-size:16px;line-height:1;border-radius:5px}
+.btn-ghost:hover{color:#1a1a2e;background:#F1F5F9}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:#6B7280;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;font-weight:500}
+.back-btn:hover{color:#1a1a2e}
+
+/* ── CARDS ──────────────────────────────────────────────────────── */
+.card{background:#fff;border-radius:14px;border:1px solid #E8ECF0;overflow:hidden}
+.card-hd{padding:15px 20px;border-bottom:1px solid #F0F4F8;display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:700;color:#1a1a2e;letter-spacing:-.01em}
+.card-body{padding:20px}
+
+/* ── EARNINGS HERO (Upwork-style) ───────────────────────────────── */
+.earn-hero{background:linear-gradient(135deg,#0f1f30 0%,#163352 100%);border-radius:16px;padding:22px 26px;margin-bottom:20px;color:#fff}
+.earn-hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.earn-greeting{font-size:18px;font-weight:700;color:#fff}
+.earn-date{font-size:11px;color:rgba(255,255,255,.4);margin-top:3px}
+.earn-period{font-size:11px;font-weight:600;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:5px 12px;border-radius:20px}
+.earn-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.09);border-radius:10px;overflow:hidden}
+.earn-stat{background:#132840;padding:14px 18px}
+.earn-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.earn-val{font-size:21px;font-weight:800;color:#fff;line-height:1}
+.earn-sub{font-size:10px;color:rgba(255,255,255,.38);margin-top:3px}
+.earn-badge{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;margin-top:5px}
+.eb-green{background:rgba(34,197,94,.2);color:#4ade80}
+.eb-yellow{background:rgba(234,179,8,.2);color:#fbbf24}
+.eb-red{background:rgba(239,68,68,.2);color:#f87171}
+
+/* ── CONTRACT CARDS (Upwork job listing) ────────────────────────── */
+.contract-list{display:flex;flex-direction:column;gap:10px}
+.contract-card{background:#fff;border-radius:14px;border:1.5px solid #E8ECF0;overflow:hidden;cursor:pointer;transition:all .18s}
+.contract-card:hover{box-shadow:0 4px 22px rgba(0,0,0,.09);border-color:#C5D0DE;transform:translateY(-1px)}
+.cc-top{padding:16px 20px 12px;display:flex;gap:14px;align-items:flex-start}
+.cc-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;font-weight:700;color:#fff}
+.cc-info{flex:1;min-width:0}
+.cc-name{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:1px}
+.cc-client{font-size:11px;color:#6B7280;font-weight:500}
+.cc-desc{font-size:12px;color:#6B7280;line-height:1.5;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cc-right{text-align:right;flex-shrink:0;min-width:90px}
+.cc-value{font-size:16px;font-weight:800;color:#1a1a2e}
+.cc-earned{font-size:11px;color:#14A800;font-weight:600;margin-top:2px}
+.cc-pending{font-size:11px;color:#d97706;font-weight:600}
+
+/* Milestone step indicators */
+.ms-steps-row{padding:0 20px 14px;display:flex;align-items:flex-start;gap:0}
+.ms-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.ms-step:last-child{flex:none;min-width:fit-content}
+.ms-connector{display:flex;align-items:center;flex:1;width:100%;position:relative;top:-9px}
+.ms-connector-line{flex:1;height:2px;background:#E8ECF0}
+.ms-connector-line.done{background:#14A800}
+.ms-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;z-index:1}
+.ms-dot-done{background:#14A800;color:#fff}
+.ms-dot-active{background:#fff;border:2.5px solid #0ea5e9;color:#0ea5e9}
+.ms-dot-blocked{background:#fee2e2;border:2px solid #fca5a5;color:#dc2626}
+.ms-dot-upcoming{background:#F8FAFC;border:2px solid #CBD5E1;color:#9CA3AF}
+.ms-dot-label{font-size:9px;color:#9CA3AF;margin-top:3px;text-align:center;max-width:60px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms-dot-price{font-size:9px;font-weight:700;color:#374151;text-align:center}
+
+.cc-bottom{padding:10px 20px;background:#FAFBFC;border-top:1px solid #F0F4F8;display:flex;align-items:center;justify-content:space-between}
+
+/* ── PILLS ──────────────────────────────────────────────────────── */
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.p-active{background:#DCFCE7;color:#16a34a}
+.p-paused{background:#FEF9C3;color:#92400e}
+.p-complete{background:#E0F2FE;color:#0369a1}
+.p-inprogress{background:#E0F2FE;color:#0369a1}
+.p-review{background:#F3E8FF;color:#6b21a8}
+.p-blocked{background:#FEF2F2;color:#991b1b}
+.p-delivered{background:#DCFCE7;color:#15803d}
+.p-testing{background:#FFF7ED;color:#92400e}
+.p-paid{background:#DCFCE7;color:#15803d}
+.p-pending{background:#FEF9C3;color:#92400e}
+.p-upcoming{background:#F1F5F9;color:#475569}
+.tag{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:#F1F5F9;color:#475569}
+
+/* ── PROGRESS BAR ───────────────────────────────────────────────── */
+.pbar{height:5px;background:#E8ECF0;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;transition:width .5s}
+
+/* ── CONTRACT DETAIL ────────────────────────────────────────────── */
+.detail-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.dstat{background:#fff;border-radius:12px;border:1px solid #E8ECF0;padding:14px 16px}
+.dstat-lbl{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.dstat-val{font-size:22px;font-weight:800;line-height:1}
+.dstat-sub{font-size:11px;color:#9CA3AF;margin-top:3px}
+
+/* Milestone timeline (Toptal-style vertical) */
+.ms-timeline{display:flex;flex-direction:column}
+.ms-block{display:flex;gap:0;padding:0}
+.ms-left{display:flex;flex-direction:column;align-items:center;width:52px;flex-shrink:0}
+.ms-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.ms-num-done{background:#14A800;color:#fff}
+.ms-num-active{background:#fff;border:2.5px solid #0ea5e9;color:#0ea5e9}
+.ms-num-blocked{background:#fee2e2;border:2px solid #fca5a5;color:#dc2626}
+.ms-num-upcoming{background:#F1F5F9;border:2px solid #CBD5E1;color:#9CA3AF}
+.ms-vline{width:2px;flex:1;min-height:20px;margin:4px 0;background:#E8ECF0}
+.ms-vline-done{background:#14A800}
+.ms-content{flex:1;padding:4px 0 22px 4px}
+.ms-title-row{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+.ms-name{font-size:14px;font-weight:700;color:#1a1a2e}
+.ms-price{font-size:14px;font-weight:800;color:#1a1a2e}
+.ms-meta-row{display:flex;gap:14px;font-size:11px;color:#9CA3AF;margin-bottom:10px;flex-wrap:wrap}
+.ms-deliverables{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.del-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#4B5563}
+.del-check-done{color:#14A800;font-size:12px;flex-shrink:0}
+.del-check-pending{color:#CBD5E1;font-size:12px;flex-shrink:0}
+.ms-feedback-block{background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:9px 12px;font-size:12px;color:#78350f;margin-top:6px;display:flex;align-items:flex-start;gap:7px}
+
+/* ── ITERATION LOG ──────────────────────────────────────────────── */
+.iter-row{padding:14px 0;border-bottom:1px solid #F5F7FA;display:flex;gap:12px;align-items:flex-start}
+.iter-row:last-child{border-bottom:none}
+.iter-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.iter-ver{font-size:11px;font-weight:700;color:#9CA3AF;min-width:34px}
+.iter-feedback{background:#FFFBEB;border:1px solid #FDE68A;border-radius:7px;padding:6px 10px;font-size:11px;color:#78350f;margin-top:6px;display:inline-flex;align-items:flex-start;gap:6px;line-height:1.4}
+
+/* ── FILTER CHIPS ───────────────────────────────────────────────── */
+.chip{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #E0E5EC;background:#fff;color:#374151;transition:all .14s}
+.chip.on{background:#0f1f30;color:#fff;border-color:#0f1f30}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-title{font-size:14px;font-weight:700;color:#1a1a2e}
+
+/* ── MODAL ──────────────────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(15,31,48,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:500px;box-shadow:0 24px 64px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #E8ECF0;position:sticky;top:0;background:#fff;z-index:1;border-radius:16px 16px 0 0}
+.modal-title{font-size:15px;font-weight:700;color:#1a1a2e}
+.modal-body{padding:20px}
+.modal-ft{padding:13px 20px;border-top:1px solid #E8ECF0;display:flex;gap:10px;justify-content:flex-end}
+
+/* ── FORMS ──────────────────────────────────────────────────────── */
+.fg{margin-bottom:14px}
+.flbl{display:block;font-size:10px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.req{color:#dc2626;margin-left:2px}
+.fi{width:100%;border:1.5px solid #DEE3EB;border-radius:8px;padding:9px 12px;font-size:13px;color:#1a1a2e;outline:none;background:#fff;transition:border-color .15s;box-sizing:border-box}
+.fi:focus{border-color:#14A800;box-shadow:0 0 0 3px rgba(20,168,0,.09)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Contract builder milestone cards */
+.ms-card{border-radius:12px;border:1.5px solid;margin-bottom:12px;overflow:hidden}
+.ms-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none}
+.ms-body-form{padding:0 16px 16px}
+.del-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.del-inp{flex:1;border:1.5px solid #DEE3EB;border-radius:7px;padding:7px 10px;font-size:12px;outline:none;background:#fff;box-sizing:border-box}
+.del-inp:focus{border-color:#14A800}
+
+/* Summary sidebar */
+.summary-box{background:#0f1f30;border-radius:12px;padding:18px;color:#fff;margin-top:14px}
+.sline{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px}
+.sline:last-child{border-bottom:none;font-weight:700;font-size:14px;padding-top:10px}
+.slbl{color:rgba(255,255,255,.5)}.sval{color:#fff}
+
+/* Earnings page */
+.pay-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #F5F7FA}
+.pay-row:last-child{border-bottom:none}
+
+/* Success */
+.success-banner{background:#DCFCE7;border:1.5px solid #86EFAC;border-radius:12px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;margin-bottom:20px}
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+
+/* ── LOGIN SCREEN ──────────────────────────────────────────────── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f1f30 0%,#163352 60%,#1e3a5f 100%)}
+.login-card{background:#fff;border-radius:20px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.login-logo{font-size:28px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:4px;letter-spacing:-.5px}
+.login-logo span{color:#14A800}
+.login-sub{text-align:center;font-size:12px;color:#9CA3AF;margin-bottom:28px}
+.role-btn{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:14px;border:2px solid #E8ECF0;background:#FAFBFC;cursor:pointer;transition:all .18s;margin-bottom:12px;width:100%}
+.role-btn:hover{border-color:#14A800;background:#F0FDF4;transform:translateY(-1px);box-shadow:0 4px 16px rgba(20,168,0,.1)}
+.role-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;color:#fff;font-weight:700}
+.role-info{flex:1;text-align:left}
+.role-name{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:2px}
+.role-desc{font-size:11px;color:#9CA3AF}
+.login-pw{margin-top:14px;display:none}
+.login-pw.show{display:block}
+.login-pw-row{display:flex;gap:8px}
+.login-err{font-size:11px;color:#dc2626;margin-top:6px;display:none}
+.login-err.show{display:block}
+
+/* ── AVAILABLE WORK ────────────────────────────────────────────── */
+.avail-card{background:#fff;border-radius:14px;border:1.5px solid #E8ECF0;overflow:hidden;transition:all .18s;margin-bottom:12px}
+.avail-card:hover{box-shadow:0 4px 22px rgba(0,0,0,.09);border-color:#C5D0DE}
+.avail-top{padding:18px 20px 14px;display:flex;gap:14px;align-items:flex-start}
+.avail-info{flex:1;min-width:0}
+.avail-name{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:3px}
+.avail-desc{font-size:12px;color:#6B7280;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.avail-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:#9CA3AF}
+.avail-right{text-align:right;flex-shrink:0}
+.avail-budget{font-size:18px;font-weight:800;color:#1a1a2e}
+.avail-ms-count{font-size:11px;color:#9CA3AF;margin-top:2px}
+.avail-bottom{padding:12px 20px;background:#FAFBFC;border-top:1px solid #F0F4F8;display:flex;align-items:center;justify-content:space-between}
+.avail-empty{text-align:center;padding:60px 20px;color:#9CA3AF}
+.avail-empty-icon{font-size:48px;margin-bottom:12px}
+.urgency-pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.urg-high{background:#FEF2F2;color:#dc2626}
+.urg-medium{background:#FEF9C3;color:#92400e}
+.urg-low{background:#DCFCE7;color:#16a34a}
+.accept-btn{background:#14A800;color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .14s}
+.accept-btn:hover{background:#0d8f00;transform:translateY(-1px)}
+
+/* ── BOSS DASHBOARD ────────────────────────────────────────────── */
+.boss-hero{background:linear-gradient(135deg,#0f1f30 0%,#1e3a5f 100%);border-radius:16px;padding:22px 26px;margin-bottom:20px;color:#fff}
+.boss-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.09);border-radius:10px;overflow:hidden;margin-top:16px}
+.boss-stat{background:#132840;padding:14px 18px}
+.boss-posted{background:#fff;border-radius:14px;border:1.5px solid #E8ECF0;overflow:hidden;margin-bottom:10px}
+.boss-posted-top{padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.boss-posted-name{font-size:14px;font-weight:700;color:#1a1a2e}
+.boss-posted-meta{font-size:11px;color:#9CA3AF;margin-top:2px}
+.boss-contractor-card{background:#fff;border-radius:12px;border:1px solid #E8ECF0;padding:14px 18px;margin-bottom:8px;opacity:.85}
+
+/* ── FEEDBACK ──────────────────────────────────────────────────── */
+.fb-hero{background:linear-gradient(135deg,#0f1f30 0%,#163352 100%);border-radius:16px;padding:22px 26px;margin-bottom:20px;color:#fff}
+.fb-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.09);border-radius:10px;overflow:hidden;margin-top:16px}
+.fb-stat{background:#132840;padding:14px 18px}
+.stars{display:inline-flex;gap:1px;vertical-align:middle}
+.star{font-size:15px;cursor:default}
+.star.filled{color:#f59e0b}
+.star.empty{color:#CBD5E1}
+.star-input .star{cursor:pointer;font-size:20px;transition:color .1s}
+.star-input .star:hover{color:#f59e0b}
+.fb-card{background:#fff;border-radius:14px;border:1.5px solid #E8ECF0;overflow:hidden;margin-bottom:12px}
+.fb-card-top{padding:16px 20px;display:flex;gap:14px;align-items:flex-start}
+.fb-card-rating{flex-shrink:0;text-align:center}
+.fb-card-body{flex:1;min-width:0}
+.fb-card-from{font-size:13px;font-weight:700;color:#1a1a2e}
+.fb-card-context{font-size:11px;color:#9CA3AF;margin-top:2px}
+.fb-card-text{font-size:13px;color:#4B5563;line-height:1.6;margin-top:8px}
+.fb-response{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:12px 14px;margin:10px 20px 16px;font-size:12px;color:#1e40af}
+.fb-response-label{font-size:10px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.fb-empty{text-align:center;padding:60px 20px;color:#9CA3AF}
+.rating-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rating-bar-label{font-size:11px;color:rgba(255,255,255,.5);min-width:14px;text-align:right}
+.rating-bar{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.rating-bar-fill{height:100%;background:#f59e0b;border-radius:3px}
+.rating-bar-count{font-size:10px;color:rgba(255,255,255,.4);min-width:20px}
+
+/* ── EXTRA DASHBOARD STATS ─────────────────────────────────────── */
+.dash-extra-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.dash-xstat{background:#fff;border-radius:12px;border:1px solid #E8ECF0;padding:14px 16px;text-align:center}
+.dash-xstat-icon{font-size:22px;margin-bottom:4px}
+.dash-xstat-val{font-size:20px;font-weight:800;color:#1a1a2e;line-height:1}
+.dash-xstat-lbl{font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="mc"></div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const G={
+  view:'dashboard', selPid:null, projFilter:'all', nextId:300, contractOk:false,
+  // Auth & Onboarding
+  role:null, bossPass:'h9boss',
+  onboardingComplete:true, onboardingStep:0,
+  onboardingProfile:{name:'',title:'',bio:'',skills:[],rate:'',availability:'available'},
+  // Feedback system
+  feedback:[
+    {id:1,pid:1,iterId:4,msId:1,from:'H9 Partners',date:'2026-03-08',rating:5,text:'Great work on M1! The research plan is very thorough.',response:null,respondedAt:null},
+    {id:2,pid:2,iterId:7,msId:1,from:'Apex Digital',date:'2026-02-01',rating:4,text:'Love the new nav! A few tweaks needed on the checkout flow.',response:'Thanks! I will address the checkout flow in the next iteration.',respondedAt:'2026-02-02'},
+    {id:3,pid:2,iterId:8,msId:2,from:'Apex Digital',date:'2026-02-15',rating:5,text:'Excellent — ready to move to handoff.',response:null,respondedAt:null},
+    {id:4,pid:3,iterId:10,msId:1,from:'H9 Partners',date:'2026-01-05',rating:5,text:'Exactly what we needed — really clean work!',response:'Thank you! Happy to help with any future iterations.',respondedAt:'2026-01-06'},
+    {id:5,pid:3,iterId:11,msId:2,from:'H9 Partners',date:'2026-01-20',rating:5,text:'Incredible improvement. Signing off on final payment now.',response:null,respondedAt:null},
+    {id:6,pid:4,iterId:12,msId:1,from:'GrowthLab Co.',date:'2026-02-01',rating:4,text:'Good research. Move to prototyping.',response:null,respondedAt:null},
+    {id:7,pid:4,iterId:13,msId:2,from:'GrowthLab Co.',date:'2026-02-18',rating:3,text:'We are still working on the auth decision. Please stand by.',response:'Understood — will resume once the decision is made.',respondedAt:'2026-02-19'},
+    {id:8,pid:1,iterId:2,msId:null,from:'H9 Partners',date:'2026-03-05',rating:4,text:'Looks clean! Can we make the contract cards more prominent?',response:'Absolutely — working on that in the next iteration.',respondedAt:'2026-03-06'},
+  ],
+  nextFeedbackId:9, feedbackFilter:'all', feedbackSort:'newest',
+  // Available contracts (boss posts these)
+  available:[
+    {id:500,name:'Brand Identity System',desc:'Complete brand identity including logo, color palette, typography, and brand guidelines document for H9 Partners sub-brand.',
+      budget:4500,cat:'Branding',urgency:'high',status:'open',postedAt:'2026-03-10',claimedBy:null,claimedAt:null,
+      milestones:[
+        {id:1,name:'Discovery & Moodboards',price:1500,due:'2026-03-25',dels:['Competitor audit','Moodboard deck','Brand brief']},
+        {id:2,name:'Logo & Identity',price:2000,due:'2026-04-05',dels:['3 logo concepts','Color palette','Typography']},
+        {id:3,name:'Brand Guidelines Doc',price:1000,due:'2026-04-15',dels:['Brand guidelines PDF','Asset package']}
+      ]},
+    {id:501,name:'Investor Pitch Deck',desc:'Design a compelling investor pitch deck with data visualizations, narrative flow, and polished visuals for Series A fundraise.',
+      budget:3200,cat:'Product Design',urgency:'medium',status:'open',postedAt:'2026-03-08',claimedBy:null,claimedAt:null,
+      milestones:[
+        {id:1,name:'Content & Structure',price:1200,due:'2026-03-20',dels:['Story outline','Content hierarchy','Key metrics']},
+        {id:2,name:'Design & Polish',price:2000,due:'2026-04-01',dels:['Full deck design','Animations','Print-ready PDF']}
+      ]},
+    {id:502,name:'Internal Wiki Redesign',desc:'Redesign the internal knowledge base UI for better navigation, search, and content organization.',
+      budget:2800,cat:'UX Design',urgency:'low',status:'open',postedAt:'2026-03-05',claimedBy:null,claimedAt:null,
+      milestones:[
+        {id:1,name:'Audit & Wireframes',price:1200,due:'2026-04-01',dels:['Content audit','IA restructure','Wireframes']},
+        {id:2,name:'Visual Design',price:1600,due:'2026-04-15',dels:['HiFi mockups','Component library','Style guide']}
+      ]},
+  ],
+  nextAvailId:503, bossFilter:'all',
+  bossDraft:{name:'',desc:'',budget:'',cat:'Product Design',urgency:'medium',
+    milestones:[{id:1,name:'',price:'',due:'',dels:[''],open:true,ci:0}]},
+  // Contractor draft
+  draft:{name:'',client:'H9 Partners',cat:'Product Design',desc:'',rateType:'Phase-Based',budget:'',
+    milestones:[{id:1,name:'',desc:'',price:'',due:'',dels:[''],open:true,ci:0}]},
+  projects:[
+    {id:1,name:'IterateIQ — Contract Tracker',client:'H9 Partners',
+      desc:'Two-week sprint: design & build a milestone-based contract/iteration tracker MVP with UX research plan.',
+      status:'active',color:'#14A800',cat:'Product Design',tags:['ux','mvp','research'],at:'2026-03-01',
+      budget:2000,rate:'Phase-Based',
+      milestones:[
+        {id:1,name:'Product Spec + MVP',price:1000,status:'complete',paid:true,due:'2026-03-08',dels:['Product requirements doc','Clickable HTML prototype','UX research plan']},
+        {id:2,name:'Final Prototype',price:1000,status:'in-progress',paid:false,due:'2026-03-15',dels:['Refined prototype','Usability test report','Final design handoff']},
+      ]},
+    {id:2,name:'Mobile App Redesign',client:'Apex Digital',
+      desc:'Full UX overhaul of the iOS flagship app — all core user flows, design system, and developer handoff.',
+      status:'active',color:'#0ea5e9',cat:'UX Design',tags:['mobile','ux','ios'],at:'2026-01-15',
+      budget:12400,rate:'Phase-Based',
+      milestones:[
+        {id:1,name:'Discovery + Wireframes',price:3000,status:'complete',paid:true,due:'2026-01-30',dels:['User interviews (8)','12 wireframe screens','Nav architecture']},
+        {id:2,name:'HiFi Mockups',price:5000,status:'complete',paid:true,due:'2026-02-15',dels:['40 HiFi screens','Design tokens','Dark mode variants']},
+        {id:3,name:'Developer Handoff',price:4400,status:'in-progress',paid:false,due:'2026-03-15',dels:['Exported assets','Component specs','Interactive prototype']},
+      ]},
+    {id:3,name:'Analytics Dashboard',client:'H9 Partners',
+      desc:'Internal reporting dashboard for product metrics, KPI tracking, and pipeline visibility.',
+      status:'complete',color:'#7c3aed',cat:'Product Design',tags:['data','dashboard'],at:'2025-11-10',
+      budget:5500,rate:'Fixed Price',
+      milestones:[
+        {id:1,name:'MVP Launch',price:3000,status:'complete',paid:true,due:'2026-01-05',dels:['8 reports live','Auth configured','Data pipelines']},
+        {id:2,name:'Optimization + Handoff',price:2500,status:'complete',paid:true,due:'2026-01-20',dels:['68% load time improvement','Full documentation','Team training']},
+      ]},
+    {id:4,name:'Onboarding Flow Redesign',client:'GrowthLab Co.',
+      desc:'Redesign new-user onboarding to improve D7 activation — user research, prototype, and usability testing.',
+      status:'paused',color:'#f59e0b',cat:'UX Design',tags:['ux','growth','onboarding'],at:'2026-01-28',
+      budget:6800,rate:'Phase-Based',
+      milestones:[
+        {id:1,name:'Discovery Research',price:1800,status:'complete',paid:true,due:'2026-02-10',dels:['8 user interviews','Affinity map','Insights report']},
+        {id:2,name:'Prototype A',price:2500,status:'blocked',paid:false,due:'2026-02-28',dels:['Interactive prototype','A/B variant','Usability test plan']},
+        {id:3,name:'Final Prototype + Report',price:2500,status:'upcoming',paid:false,due:'2026-03-20',dels:['Final prototype','Test results','Recommendations']},
+      ]},
+  ],
+  iters:[
+    {id:1,pid:1,ver:'v0.1',title:'App Architecture + State Machine',status:'complete',date:'2026-03-03',hrs:8,
+      notes:'Scaffolded vanilla JS app with sidebar, state object, and render system.',changes:['App scaffold','State management','Sidebar nav'],feedback:''},
+    {id:2,pid:1,ver:'v0.2',title:'Dashboard + Contract Cards',status:'complete',date:'2026-03-05',hrs:12,
+      notes:'Built dashboard with earnings stats, project cards, and chart views.',changes:['Dashboard view','Stats row','Contract cards'],feedback:"Looks clean! Can we make the contract cards more prominent?"},
+    {id:3,pid:1,ver:'v0.3',title:'Contract Builder Widget',status:'complete',date:'2026-03-07',hrs:10,
+      notes:'Milestone-based contract creation form with budget sidebar and live summary.',changes:['Contract builder','Milestone form','Budget sidebar'],feedback:''},
+    {id:4,pid:1,ver:'v1.0',title:'M1 Delivery — MVP + UX Research Plan',status:'complete',date:'2026-03-08',hrs:6,
+      notes:'Merged contract widget with MVP. Delivered all M1 items to H9 Partners.',changes:['Widget integration','UX research plan doc','M1 sign-off'],feedback:'Great work on M1! The research plan is very thorough.'},
+    {id:5,pid:1,ver:'v1.1',title:'Freelance-First Redesign',status:'in-progress',date:'2026-03-11',hrs:4,
+      notes:'Redesigning UI around the contract-tracking problem — Upwork/Toptal-inspired, milestone steps, earnings hero, feedback tracking.',changes:['New design system','Milestone timeline','Feedback field'],feedback:''},
+    {id:6,pid:2,ver:'v0.1',title:'User Research + Discovery',status:'complete',date:'2026-01-20',hrs:14,
+      notes:'8 user interviews completed. Identified 5 core pain points in current navigation.',changes:['Interview notes','Pain point map','HMW statements'],feedback:'Research is solid. Proceed to wireframes.'},
+    {id:7,pid:2,ver:'v0.2',title:'Wireframes (40 screens)',status:'complete',date:'2026-02-01',hrs:22,
+      notes:'Low-fidelity wireframes for all core user flows. Nav restructured per research.',changes:['40 wireframes','Nav restructure','User flows'],feedback:"Love the new nav! A few tweaks needed on the checkout flow."},
+    {id:8,pid:2,ver:'v0.3',title:'HiFi Mockups + Design System',status:'complete',date:'2026-02-15',hrs:28,
+      notes:'Full-color mockups with design token documentation. Dark mode complete.',changes:['40 HiFi screens','Design tokens','Dark mode'],feedback:'Excellent — ready to move to handoff.'},
+    {id:9,pid:2,ver:'v1.0',title:'Developer Handoff (In Progress)',status:'in-progress',date:'2026-03-01',hrs:12,
+      notes:'Exporting assets and writing component specs. 4 complex animations still TBD.',changes:['Assets exported','Component specs WIP'],feedback:''},
+    {id:10,pid:3,ver:'v1.0',title:'Dashboard MVP Launch',status:'complete',date:'2026-01-05',hrs:18,
+      notes:'8 core reports live. Auth configured, all data pipelines connected.',changes:['8 reports','Auth','Pipelines'],feedback:'Exactly what we needed — really clean work!'},
+    {id:11,pid:3,ver:'v1.1',title:'Performance + Optimization',status:'complete',date:'2026-01-20',hrs:11,
+      notes:'Load time reduced 68% (4.2s → 1.3s). Lazy loading and query caching added.',changes:['Query cache','4.2s→1.3s load time','Lazy loading'],feedback:'Incredible improvement. Signing off on final payment now.'},
+    {id:12,pid:4,ver:'v0.1',title:'User Research Sprint',status:'complete',date:'2026-02-01',hrs:8,
+      notes:'8 user interviews. Key insight: users want visible progress throughout onboarding.',changes:['8 interviews','Affinity map','Key insights'],feedback:'Good research. Move to prototyping.'},
+    {id:13,pid:4,ver:'v0.2',title:'Prototype A (Blocked)',status:'blocked',date:'2026-02-18',hrs:5,
+      notes:'60% complete — blocked pending 3rd-party auth API decision from client side.',changes:['60% prototype','Blocked: auth TBD'],feedback:"We're still working on the auth decision. Please stand by."},
+  ]
+};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const PCOLS=['#14A800','#0ea5e9','#7c3aed','#f59e0b','#dc2626','#ec4899','#0d9488'];
+const CATS=['Product Design','UX Design','Engineering','Branding','Content','Data / BI','Marketing','Consulting','QA','Other'];
+const RTYPES=['Phase-Based','Fixed Price','Hourly Rate','Retainer'];
+const MCOLS=[
+  {bg:'#EFF6FF',bd:'#BFDBFE',tx:'#1d4ed8',fill:'#3B82F6'},
+  {bg:'#F5F3FF',bd:'#DDD6FE',tx:'#5b21b6',fill:'#7c3aed'},
+  {bg:'#F0FDF4',bd:'#BBF7D0',tx:'#15803d',fill:'#16a34a'},
+  {bg:'#FFFBEB',bd:'#FDE68A',tx:'#92400e',fill:'#d97706'},
+  {bg:'#FDF4FF',bd:'#E9D5FF',tx:'#6b21a8',fill:'#a855f7'},
+  {bg:'#ECFEFF',bd:'#A5F3FC',tx:'#0e7490',fill:'#0891b2'},
+];
+const ISCFG={
+  'in-progress':{lbl:'In Progress',pill:'p-inprogress',dot:'#0ea5e9'},
+  'review':{lbl:'Under Review',pill:'p-review',dot:'#7c3aed'},
+  'testing':{lbl:'QA / Testing',pill:'p-testing',dot:'#f59e0b'},
+  'complete':{lbl:'Delivered',pill:'p-delivered',dot:'#14A800'},
+  'blocked':{lbl:'Blocked',pill:'p-blocked',dot:'#dc2626'},
+};
+const MSCFG={
+  'complete':{lbl:'Delivered',pill:'p-delivered',dot:'ms-dot-done',num:'ms-num-done',line:'ms-vline-done'},
+  'in-progress':{lbl:'In Progress',pill:'p-inprogress',dot:'ms-dot-active',num:'ms-num-active',line:''},
+  'blocked':{lbl:'Blocked',pill:'p-blocked',dot:'ms-dot-blocked',num:'ms-num-blocked',line:''},
+  'upcoming':{lbl:'Upcoming',pill:'p-upcoming',dot:'ms-dot-upcoming',num:'ms-num-upcoming',line:''},
+};
+const PSCFG={
+  'active':{lbl:'Active',pill:'p-active'},
+  'paused':{lbl:'On Hold',pill:'p-paused'},
+  'complete':{lbl:'Closed',pill:'p-complete'},
+};
+const URGCFG={
+  'high':{lbl:'Urgent',pill:'urg-high',color:'#dc2626'},
+  'medium':{lbl:'Medium',pill:'urg-medium',color:'#d97706'},
+  'low':{lbl:'Low',pill:'urg-low',color:'#16a34a'},
+};
+const AVSCFG={
+  'open':{lbl:'Open',pill:'p-active'},
+  'claimed':{lbl:'Claimed',pill:'p-inprogress'},
+  'expired':{lbl:'Expired',pill:'p-upcoming'},
+};
+
+const e=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmt=n=>!n&&n!==0?'':'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const pd=s=>{const n=parseFloat(String(s||'').replace(/[$,]/g,''));return isNaN(n)?0:n;};
+const fd=d=>{if(!d)return '—';return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});};
+const piters=pid=>G.iters.filter(i=>i.pid===pid);
+const thrs=its=>its.reduce((s,i)=>s+(i.hrs||0),0);
+const earned=p=>p.milestones.filter(m=>m.paid).reduce((s,m)=>s+m.price,0);
+const pending=p=>p.milestones.filter(m=>!m.paid&&m.status!=='upcoming').reduce((s,m)=>s+m.price,0);
+const msProgress=p=>{const tot=p.milestones.length,done=p.milestones.filter(m=>m.status==='complete').length;return tot?Math.round(done/tot*100):0;};
+
+function pill(st,type='i'){
+  const cfg=type==='i'?ISCFG[st]:PSCFG[st];
+  if(!cfg)return '';
+  return `<span class="pill ${cfg.pill}">${cfg.lbl}</span>`;
+}
+function urgPill(u){const c=URGCFG[u]||URGCFG['medium'];return `<span class="urgency-pill ${c.pill}">${c.lbl}</span>`;}
+function avPill(s){const c=AVSCFG[s]||AVSCFG['open'];return `<span class="pill ${c.pill}">${c.lbl}</span>`;}
+function starsHtml(rating,interactive,id){
+  let h='';const cls=interactive?'star-input stars':'stars';
+  for(let i=1;i<=5;i++){
+    if(interactive){h+=`<span class="star ${i<=rating?'filled':'empty'}" onclick="setStarRating(${id||0},${i})">★</span>`;}
+    else{h+=`<span class="star ${i<=rating?'filled':'empty'}">★</span>`;}
+  }
+  return `<span class="${cls}">${h}</span>`;
+}
+function avgRating(fbs){if(!fbs||!fbs.length)return 0;return fbs.reduce((s,f)=>s+f.rating,0)/fbs.length;}
+function sentimentBreakdown(fbs){
+  let pos=0,neu=0,neg=0;
+  fbs.forEach(f=>{if(f.rating>=4)pos++;else if(f.rating===3)neu++;else neg++;});
+  return {pos,neu,neg,total:fbs.length};
+}
+function projFeedback(pid){return G.feedback.filter(f=>f.pid===pid);}
+function msPill(st){
+  const cfg=MSCFG[st]||MSCFG['upcoming'];
+  return `<span class="pill ${cfg.pill}">${cfg.lbl}</span>`;
+}
+
+// ── SVG CHARTS ────────────────────────────────────────────────────────────────
+function barChart(data,kx,ky,color,h=110){
+  if(!data.length)return `<div style="height:${h}px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px">No data yet</div>`;
+  const w=400,mx=Math.max(...data.map(d=>d[ky]),1),bw=Math.max(6,Math.floor((w-40)/data.length)-8);
+  const bars=data.map((d,i)=>{
+    const bh=Math.max(4,Math.round((d[ky]/mx)*(h-28))),x=20+i*((w-40)/data.length)+4,y=h-20-bh;
+    return `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="3" fill="${color}" opacity=".85"/>
+            <text x="${x+bw/2}" y="${h-5}" text-anchor="middle" font-size="9" fill="#9CA3AF">${e(d[kx])}</text>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">${bars}</svg>`;
+}
+function areaChart(data,kx,ky,color,h=110){
+  if(data.length<2)return barChart(data,kx,ky,color,h);
+  const w=400,mx=Math.max(...data.map(d=>d[ky]),1);
+  const pts=data.map((d,i)=>[20+(i/(data.length-1))*(w-40),8+(1-d[ky]/mx)*(h-32)]);
+  const lp=pts.map(([x,y])=>`${x},${y}`).join(' ');
+  const ap=`${pts[0][0]},${h-18} ${lp} ${pts[pts.length-1][0]},${h-18}`;
+  const lbls=data.map((d,i)=>{const x=20+(i/(data.length-1))*(w-40);return `<text x="${x}" y="${h-4}" text-anchor="middle" font-size="9" fill="#9CA3AF">${e(d[kx])}</text>`;}).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    <defs><linearGradient id="ag${color.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".18"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+    <polygon points="${ap}" fill="url(#ag${color.slice(1)})"/>
+    <polyline points="${lp}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.5" fill="${color}"/>`).join('')}${lbls}</svg>`;
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function loginView(){
+  return `<div class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">Iterate<span>IQ</span></div>
+      <div class="login-sub">H9 Partners — Contract Management Platform</div>
+      <button class="role-btn" onclick="loginAs('contractor')">
+        <div class="role-icon" style="background:linear-gradient(135deg,#14A800,#0ea5e9)">JH</div>
+        <div class="role-info">
+          <div class="role-name">Jacob H. — Contractor</div>
+          <div class="role-desc">Track projects, phases, earnings & feedback</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="role-btn" onclick="loginAs('boss')">
+        <div class="role-icon" style="background:linear-gradient(135deg,#0f1f30,#1e3a5f)">H9</div>
+        <div class="role-info">
+          <div class="role-name">Boss — H9 Partners</div>
+          <div class="role-desc">Post contracts, review contractor progress</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div style="text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid #F0F0F0">
+        <span style="font-size:12px;color:#B0B8C4;cursor:pointer;transition:color .15s" onmouseover="this.style.color='#6B7280'" onmouseout="this.style.color='#B0B8C4'" onclick="loginAs('new-contractor')">Sign up as a new contractor</span>
+      </div>
+    </div>
+  </div>`;
+}
+function loginAs(role){
+  if(role==='new-contractor'){
+    G.role='contractor';
+    G.onboardingComplete=false;
+    G.onboardingStep=0;
+    G.onboardingProfile={name:'',title:'',bio:'',skills:[],rate:'',availability:'available'};
+    G.view='dashboard';
+  } else {
+    G.role=role;
+    G.onboardingComplete=true;
+    G.view=role==='boss'?'boss-dashboard':'dashboard';
+  }
+  render();
+}
+function logout(){G.role=null;render();}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function nav(view,pid){
+  G.view=view;
+  if(pid!==undefined)G.selPid=pid;
+  render();
+}
+function updateContractNav(){
+  const c=document.getElementById('contract-nav');
+  if(!c)return;
+  c.innerHTML=G.projects.map(p=>`
+    <div class="contract-nav-item ${G.view==='contract'&&G.selPid===p.id?'active':''}" data-pid="${p.id}" onclick="nav('contract',${p.id})">
+      <div class="cn-dot" style="background:${p.color}"></div>
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${e(p.name.split('—')[0].split(' ').slice(0,3).join(' '))}</span>
+    </div>`).join('');
+  const nb=document.getElementById('nb-active');
+  if(nb)nb.textContent=G.projects.filter(p=>p.status==='active').length;
+}
+function sidebarHtml(){
+  if(G.role==='boss') return `<aside class="sidebar">
+    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">H9 Partners — Boss Panel</div></div>
+    <div class="sb-section">
+      <div class="sb-lbl">Management</div>
+      <div class="nav-item ${G.view==='boss-dashboard'?'active':''}" data-v="boss-dashboard" onclick="nav('boss-dashboard')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item ${G.view==='boss-post'?'active':''}" data-v="boss-post" onclick="nav('boss-post')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Post Contract
+      </div>
+      <div class="nav-item ${G.view==='boss-overview'?'active':''}" data-v="boss-overview" onclick="nav('boss-overview')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Contractor Overview
+      </div>
+    </div>
+    <div class="sb-footer">
+      <div class="user-row">
+        <div class="avatar" style="background:linear-gradient(135deg,#0f1f30,#1e3a5f)">H9</div>
+        <div><div class="user-name">H9 Partners</div><div class="user-role">Boss</div></div>
+        <div class="online-dot"></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;justify-content:center;font-size:11px" onclick="logout()">Logout</button>
+    </div>
+  </aside>`;
+  // Contractor sidebar
+  const openAvail=G.available.filter(a=>a.status==='open').length;
+  return `<aside class="sidebar">
+    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">H9 Partners — Contract Platform</div></div>
+    <div class="sb-section">
+      <div class="sb-lbl">Overview</div>
+      <div class="nav-item ${G.view==='dashboard'?'active':''}" data-v="dashboard" onclick="nav('dashboard')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard <span class="nav-badge" id="nb-active">${G.projects.filter(p=>p.status==='active').length}</span>
+      </div>
+      <div class="nav-item ${G.view==='earnings'?'active':''}" data-v="earnings" onclick="nav('earnings')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Earnings
+      </div>
+      <div class="nav-item ${G.view==='available'?'active':''}" data-v="available" onclick="nav('available')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Open Contracts ${openAvail?`<span class="nav-badge">${openAvail}</span>`:''}
+      </div>
+      <div class="nav-item ${G.view==='feedback'?'active':''}" data-v="feedback" onclick="nav('feedback')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Feedback <span class="nav-badge nav-badge-blue">${G.feedback.length}</span>
+      </div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-lbl">Contracts</div>
+      <div id="contract-nav"></div>
+      <div class="nav-item ${G.view==='new-contract'?'active':''}" data-v="new-contract" onclick="nav('new-contract')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Contract
+      </div>
+    </div>
+    <div class="sb-footer">
+      <div class="user-row">
+        <div class="avatar">JH</div>
+        <div><div class="user-name">Jacob H.</div><div class="user-role">Freelance Designer</div></div>
+        <div class="online-dot"></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;justify-content:center;font-size:11px" onclick="logout()">Logout</button>
+    </div>
+  </aside>`;
+}
+// ── ONBOARDING WIZARD ────────────────────────────────────────────────────────
+function onboardingView(){
+  const s=G.onboardingStep;
+  const p=G.onboardingProfile;
+  const steps=['Welcome','Profile','Skills','Preferences','Tour'];
+  const pct=Math.round((s/steps.length)*100);
+  const skillOpts=['UX Design','Engineering','Product','Data / BI','Marketing','Consulting','Branding','Content','QA'];
+
+  const stepBar=steps.map((st,i)=>`
+    <div style="flex:1;text-align:center">
+      <div style="width:28px;height:28px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+        background:${i<s?'#14A800':i===s?'#0ea5e9':'#E8ECF0'};color:${i<=s?'#fff':'#9CA3AF'}">${i<s?'✓':i+1}</div>
+      <div style="font-size:10px;font-weight:${i===s?'700':'500'};color:${i===s?'#1a1a2e':'#9CA3AF'}">${st}</div>
+    </div>`).join('');
+
+  let content='';
+  if(s===0){
+    content=`<div style="text-align:center;padding:40px 0">
+      <div style="font-size:48px;margin-bottom:16px">👋</div>
+      <h2 style="font-size:24px;font-weight:800;color:#0f1f30;margin-bottom:8px">Welcome to IterateIQ</h2>
+      <p style="color:#4B5563;max-width:400px;margin:0 auto 24px;line-height:1.6">The contract management platform for H9 Partners. Track projects, earn money, and build your professional reputation.</p>
+      <button class="btn btn-primary" onclick="G.onboardingStep=1;render()" style="padding:12px 32px;font-size:15px">Get Started →</button>
+    </div>`;
+  } else if(s===1){
+    content=`<div style="max-width:440px;margin:0 auto">
+      <h3 style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:16px">Set Up Your Profile</h3>
+      <div style="margin-bottom:14px"><label class="flbl">Full Name</label><input class="fi" value="${e(p.name)}" placeholder="Jacob Hernandez" onchange="G.onboardingProfile.name=this.value"/></div>
+      <div style="margin-bottom:14px"><label class="flbl">Professional Title</label><input class="fi" value="${e(p.title)}" placeholder="e.g. UX Designer, Product Engineer" onchange="G.onboardingProfile.title=this.value"/></div>
+      <div style="margin-bottom:14px"><label class="flbl">Short Bio</label><textarea class="fi" rows="3" placeholder="Brief description of your expertise (250 chars)" style="resize:none" onchange="G.onboardingProfile.bio=this.value">${e(p.bio)}</textarea></div>
+      <div style="margin-bottom:14px"><label class="flbl">Hourly Rate</label><input class="fi" type="number" value="${e(p.rate)}" placeholder="120" onchange="G.onboardingProfile.rate=this.value" style="max-width:160px"/></div>
+    </div>`;
+  } else if(s===2){
+    const skillChips=skillOpts.map(sk=>{
+      const sel=p.skills.includes(sk);
+      return `<button onclick="toggleOnboardSkill('${sk}')" style="padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid ${sel?'#14A800':'#E8ECF0'};background:${sel?'#E8F5E9':'#fff'};color:${sel?'#0E7A00':'#4B5563'};transition:all .15s">${sk}</button>`;
+    }).join('');
+    content=`<div style="max-width:480px;margin:0 auto">
+      <h3 style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Skills & Expertise</h3>
+      <p style="font-size:13px;color:#9CA3AF;margin-bottom:16px">Select all that apply. These help managers find the right contracts for you.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">${skillChips}</div>
+      <div style="margin-top:16px;padding:12px;background:#F8FAFC;border-radius:8px;font-size:12px;color:#4B5563">
+        <strong>${p.skills.length}</strong> skill${p.skills.length!==1?'s':''} selected
+      </div>
+    </div>`;
+  } else if(s===3){
+    content=`<div style="max-width:440px;margin:0 auto">
+      <h3 style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:16px">Preferences</h3>
+      <div style="margin-bottom:14px">
+        <label class="flbl">Availability</label>
+        <select class="fi" onchange="G.onboardingProfile.availability=this.value">
+          <option value="available" ${p.availability==='available'?'selected':''}>Available — Ready for new contracts</option>
+          <option value="busy" ${p.availability==='busy'?'selected':''}>Busy — Currently at capacity</option>
+          <option value="away" ${p.availability==='away'?'selected':''}>Away — Not taking work</option>
+        </select>
+      </div>
+      <div style="margin-bottom:14px">
+        <label class="flbl">Preferred Contract Types</label>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4B5563;cursor:pointer">
+            <input type="checkbox" checked/> Phase-Based (recommended)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4B5563;cursor:pointer">
+            <input type="checkbox"/> Fixed Price
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4B5563;cursor:pointer">
+            <input type="checkbox"/> Hourly Rate
+          </label>
+        </div>
+      </div>
+      <div style="padding:12px;background:#EFF6FF;border-radius:8px;border:1px solid #BFDBFE">
+        <div style="font-size:12px;font-weight:600;color:#1d4ed8;margin-bottom:4px">💡 Tip</div>
+        <div style="font-size:12px;color:#4B5563">You can change these anytime from your profile settings.</div>
+      </div>
+    </div>`;
+  } else if(s===4){
+    content=`<div style="text-align:center;padding:32px 0">
+      <div style="font-size:48px;margin-bottom:16px">🎉</div>
+      <h3 style="font-size:20px;font-weight:800;color:#0f1f30;margin-bottom:8px">You're All Set!</h3>
+      <p style="color:#4B5563;max-width:400px;margin:0 auto 24px;line-height:1.6">Your profile is ready. Here's what you can do next:</p>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto;text-align:left">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0">
+          <span style="font-size:18px">📋</span>
+          <div><div style="font-size:13px;font-weight:600;color:#15803d">Browse Open Contracts</div><div style="font-size:11px;color:#4B5563">Find work posted by H9 Partners</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#EFF6FF;border-radius:8px;border:1px solid #BFDBFE">
+          <span style="font-size:18px">💰</span>
+          <div><div style="font-size:13px;font-weight:600;color:#1d4ed8">Track Earnings</div><div style="font-size:11px;color:#4B5563">Monitor payments across all contracts</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#F5F3FF;border-radius:8px;border:1px solid #DDD6FE">
+          <span style="font-size:18px">⭐</span>
+          <div><div style="font-size:13px;font-weight:600;color:#5b21b6">Build Reputation</div><div style="font-size:11px;color:#4B5563">Earn ratings and grow your profile</div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="G.onboardingComplete=true;G.view='dashboard';render()" style="margin-top:24px;padding:12px 32px;font-size:15px">Go to Dashboard →</button>
+    </div>`;
+  }
+
+  return `<div style="min-height:100vh;background:#F0F2F5;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div style="background:#fff;border-radius:16px;width:100%;max-width:600px;box-shadow:0 8px 32px rgba(0,0,0,0.12);overflow:hidden">
+      <div style="background:#0f1f30;padding:20px 24px">
+        <div style="font-size:18px;font-weight:800;color:#fff">Iterate<span style="color:#14A800">IQ</span></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Contractor Onboarding</div>
+      </div>
+      <div style="padding:20px 24px 12px">
+        <div style="display:flex;align-items:flex-start;gap:4px;margin-bottom:8px">${stepBar}</div>
+        <div style="height:4px;background:#E8ECF0;border-radius:2px;overflow:hidden;margin-bottom:4px">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#14A800,#0ea5e9);border-radius:2px;transition:width .3s"></div>
+        </div>
+        <div style="font-size:10px;color:#9CA3AF;text-align:right">${pct}% complete</div>
+      </div>
+      <div style="padding:0 24px 24px">${content}</div>
+      ${s>0&&s<4?`<div style="padding:0 24px 20px;display:flex;justify-content:space-between">
+        <button class="btn btn-outline btn-sm" onclick="G.onboardingStep--;render()">← Back</button>
+        <div style="display:flex;gap:8px">
+          ${s<3?'<button class="btn btn-outline btn-sm" onclick="G.onboardingStep++;render()">Skip for now</button>':''}
+          <button class="btn btn-primary btn-sm" onclick="G.onboardingStep++;render()">Continue →</button>
+        </div>
+      </div>`:''}
+    </div>
+  </div>`;
+}
+function toggleOnboardSkill(sk){
+  const idx=G.onboardingProfile.skills.indexOf(sk);
+  if(idx>=0)G.onboardingProfile.skills.splice(idx,1);
+  else G.onboardingProfile.skills.push(sk);
+  render();
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(!G.role){app.innerHTML=loginView();return;}
+  // Onboarding check for contractors
+  if(G.role==='contractor'&&!G.onboardingComplete){app.innerHTML=onboardingView();return;}
+  // Build app shell
+  app.innerHTML=`<div class="app" style="display:flex;height:100vh;overflow:hidden">
+    ${sidebarHtml()}
+    <main class="main" id="main"></main>
+  </div>`;
+  updateContractNav();
+  const main=document.getElementById('main');
+  if(G.role==='boss'){
+    if(G.view==='boss-dashboard')main.innerHTML=bossView();
+    else if(G.view==='boss-post')main.innerHTML=bossPostView();
+    else if(G.view==='boss-overview')main.innerHTML=bossOverviewView();
+    else main.innerHTML=bossView();
+  } else {
+    if(G.view==='dashboard')main.innerHTML=dashView();
+    else if(G.view==='contract')main.innerHTML=contractDetailView();
+    else if(G.view==='earnings')main.innerHTML=earningsView();
+    else if(G.view==='new-contract')main.innerHTML=contractBuilderView();
+    else if(G.view==='available')main.innerHTML=availableWorkView();
+    else if(G.view==='feedback')main.innerHTML=feedbackView();
+  }
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+function dashView(){
+  const ps=G.projects;
+  const activePs=ps.filter(p=>p.status==='active');
+  const totalEarned=ps.reduce((s,p)=>s+earned(p),0);
+  const totalPending=ps.reduce((s,p)=>s+pending(p),0);
+  const totalContracted=ps.reduce((s,p)=>s+p.budget,0);
+  const closedCount=ps.filter(p=>p.status==='complete').length;
+
+  const today=new Date();
+  const hr=today.getHours();
+  const greetWord=hr<12?'morning':hr<17?'afternoon':'evening';
+  const dateStr=today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+  const cards=ps.map(p=>{
+    const pctEarned=p.budget?Math.round(earned(p)/p.budget*100):0;
+    const pc=PSCFG[p.status]||{};
+    // milestone steps
+    const steps=p.milestones.map((m,i)=>{
+      const cfg=MSCFG[m.status]||MSCFG['upcoming'];
+      const isLast=i===p.milestones.length-1;
+      const lineDone=i<p.milestones.length-1&&p.milestones[i+1].status!=='upcoming'&&p.milestones[i+1].status!=='blocked'&&m.status==='complete';
+      return `<div class="ms-step" style="${isLast?'flex:none':'flex:1'}">
+        <div style="display:flex;align-items:center;width:100%">
+          <div class="ms-dot ${cfg.dot}" title="${e(m.name)}">${m.status==='complete'?'✓':i+1}</div>
+          ${!isLast?`<div class="ms-connector-line ${m.status==='complete'?'done':''}"></div>`:''}
+        </div>
+        <div class="ms-dot-label">${e(m.name.split(' ').slice(0,2).join(' '))}</div>
+        <div class="ms-dot-price">${fmt(m.price)}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="contract-card" onclick="nav('contract',${p.id})">
+      <div class="cc-top">
+        <div class="cc-icon" style="background:${p.color}">${p.name.slice(0,1)}</div>
+        <div class="cc-info">
+          <div class="cc-name">${e(p.name)}</div>
+          <div class="cc-client">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            ${e(p.client)} · ${e(p.cat)}
+          </div>
+          <div class="cc-desc">${e(p.desc)}</div>
+        </div>
+        <div class="cc-right">
+          <div class="cc-value">${fmt(p.budget)}</div>
+          <div class="cc-earned">✓ ${fmt(earned(p))} earned</div>
+          ${pending(p)>0?`<div class="cc-pending">⏳ ${fmt(pending(p))} pending</div>`:''}
+        </div>
+      </div>
+      <div class="ms-steps-row" style="display:flex;align-items:flex-start;gap:0;padding:0 20px 14px">
+        ${steps}
+      </div>
+      <div class="cc-bottom">
+        <div style="display:flex;gap:4px">${(p.tags||[]).map(t=>`<span class="tag">${e(t)}</span>`).join('')}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-size:10px;color:#9CA3AF">${pctEarned}% earned</div>
+          <div class="pbar" style="width:80px"><div class="pfill" style="width:${pctEarned}%;background:${p.color}"></div></div>
+          <span class="pill ${pc.pill||''}">${pc.lbl||p.status}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Velocity chart data
+  const velMap={};G.iters.forEach(i=>{const k=i.date.slice(5,7);velMap[k]=(velMap[k]||0)+1;});
+  const vel=Object.entries(velMap).sort().map(([k,v])=>({m:k,c:v}));
+  const earnByP=ps.map(p=>({n:p.name.split(' ')[0].replace(',',''),c:earned(p)}));
+
+  return `<div class="topbar">
+    <div><div class="topbar-title">Dashboard</div><div class="topbar-sub">All contracts · ${ps.length} total</div></div>
+    <button class="btn btn-primary" onclick="nav('new-contract')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Contract
+    </button>
+  </div>
+  <div class="content">
+    <div class="earn-hero">
+      <div class="earn-hero-top">
+        <div>
+          <div class="earn-greeting">Good ${greetWord}, Jacob</div>
+          <div class="earn-date">${dateStr}</div>
+        </div>
+        <div class="earn-period">All Time</div>
+      </div>
+      <div class="earn-stats">
+        <div class="earn-stat">
+          <div class="earn-lbl">Total Earned</div>
+          <div class="earn-val">${fmt(totalEarned)}</div>
+          <div class="earn-sub">${ps.filter(p=>p.milestones.some(m=>m.paid)).length} contracts w/ payments</div>
+          <div class="earn-badge eb-green">↑ Active</div>
+        </div>
+        <div class="earn-stat">
+          <div class="earn-lbl">Pending Payment</div>
+          <div class="earn-val">${fmt(totalPending)}</div>
+          <div class="earn-sub">phases delivered, not yet paid</div>
+          <div class="earn-badge eb-yellow">⏳ Awaiting</div>
+        </div>
+        <div class="earn-stat">
+          <div class="earn-lbl">Open Contracts</div>
+          <div class="earn-val">${activePs.length}</div>
+          <div class="earn-sub">${closedCount} closed · ${ps.length} total</div>
+          <div class="earn-badge eb-green">↑ ${activePs.length} active</div>
+        </div>
+        <div class="earn-stat">
+          <div class="earn-lbl">Total Contracted</div>
+          <div class="earn-val">${fmt(totalContracted)}</div>
+          <div class="earn-sub">across all contracts</div>
+          <div class="earn-badge eb-green">${Math.round(totalEarned/totalContracted*100)}% collected</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-extra-stats">
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">✅</div>
+        <div class="dash-xstat-val">${closedCount}</div>
+        <div class="dash-xstat-lbl">Projects Completed</div>
+      </div>
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">⏱</div>
+        <div class="dash-xstat-val">${G.iters.reduce((s,i)=>s+(i.hrs||0),0)}</div>
+        <div class="dash-xstat-lbl">Total Hours</div>
+      </div>
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">📊</div>
+        <div class="dash-xstat-val">${ps.length?fmt(Math.round(totalContracted/ps.length)):0}</div>
+        <div class="dash-xstat-lbl">Avg Project Value</div>
+      </div>
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">⭐</div>
+        <div class="dash-xstat-val">${avgRating(G.feedback).toFixed(1)}</div>
+        <div class="dash-xstat-lbl">Avg Feedback Rating</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:16px;margin-bottom:20px">
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Work Velocity</span><span style="font-size:11px;color:#9CA3AF">by month</span></div>
+        <div class="card-body">${barChart(vel,'m','c','#14A800')}</div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Earnings by Contract</span></div>
+        <div class="card-body">${barChart(earnByP,'n','c','#0ea5e9')}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+      <div>
+        <div class="sec-hd">
+          <span class="sec-title">Contracts (${ps.length})</span>
+          <button class="btn btn-outline btn-sm" onclick="nav('new-contract')">+ New Contract</button>
+        </div>
+        <div class="contract-list">${cards}</div>
+      </div>
+      <div>
+        <div class="sec-hd">
+          <span class="sec-title">Latest Feedback</span>
+          <button class="btn btn-outline btn-sm" onclick="nav('feedback')">View All</button>
+        </div>
+        ${(()=>{
+          const recent=[...G.feedback].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+          if(!recent.length)return '<div style="text-align:center;padding:30px;color:#9CA3AF;font-size:13px">No feedback yet</div>';
+          return recent.map(f=>{
+            const p=G.projects.find(x=>x.id===f.pid);
+            return `<div class="card" style="margin-bottom:8px;cursor:pointer" onclick="nav('feedback')">
+              <div style="padding:12px 16px;display:flex;gap:10px;align-items:flex-start">
+                <div style="flex-shrink:0">${starsHtml(f.rating)}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:12px;font-weight:600;color:#1a1a2e">${e(f.from)}</div>
+                  <div style="font-size:11px;color:#9CA3AF">${p?e(p.name.split('—')[0].trim()):''} · ${fd(f.date)}</div>
+                  <div style="font-size:12px;color:#4B5563;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e(f.text)}</div>
+                </div>
+              </div>
+            </div>`;
+          }).join('');
+        })()}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── CONTRACT DETAIL ───────────────────────────────────────────────────────────
+function contractDetailView(){
+  const p=G.projects.find(p=>p.id===G.selPid);
+  if(!p)return dashView();
+  const its=piters(p.id);
+  const filt=G.projFilter||'all';
+  const shown=filt==='all'?its:its.filter(i=>i.status===filt);
+  const counts=its.reduce((m,i)=>{m[i.status]=(m[i.status]||0)+1;return m;},{});
+  const earnedAmt=earned(p);
+  const pendingAmt=pending(p);
+  const doneMs=p.milestones.filter(m=>m.status==='complete').length;
+  const pc=PSCFG[p.status]||{};
+
+  // Milestone timeline
+  const timeline=p.milestones.map((m,i)=>{
+    const cfg=MSCFG[m.status]||MSCFG['upcoming'];
+    const isLast=i===p.milestones.length-1;
+    const done=m.status==='complete';
+    const dels=m.dels.map(d=>`
+      <div class="del-item">
+        <span class="${done?'del-check-done':'del-check-pending'}">${done?'✓':'○'}</span>
+        <span>${e(d)}</span>
+      </div>`).join('');
+    return `<div class="ms-block">
+      <div class="ms-left">
+        <div class="ms-num ${cfg.num}">${done?'✓':i+1}</div>
+        ${!isLast?`<div class="ms-vline ${cfg.line}"></div>`:''}
+      </div>
+      <div class="ms-content">
+        <div class="ms-title-row">
+          <span class="ms-name">${e(m.name)}</span>
+          <span class="ms-price">${fmt(m.price)}</span>
+          ${msPill(m.status)}
+          ${m.paid?`<span class="pill p-paid">✓ Paid</span>`:`<span class="pill p-pending">Unpaid</span>`}
+        </div>
+        <div class="ms-meta-row">
+          <span>Due ${fd(m.due)}</span>
+          <span>${m.dels.length} deliverable${m.dels.length!==1?'s':''}</span>
+        </div>
+        <div class="ms-deliverables">${dels}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Iteration filter chips
+  const chips=['all','complete','in-progress','review','testing','blocked'].map(s=>{
+    const lbl=s==='all'?'All':(ISCFG[s]||{}).lbl||s;
+    const cnt=s==='all'?its.length:(counts[s]||0);
+    return `<button class="chip ${filt===s?'on':''}" onclick="setPF('${s}')">${lbl} ${cnt}</button>`;
+  }).join('');
+
+  // Iteration rows
+  const rows=shown.length?[...shown].reverse().map(it=>{
+    const cfg=ISCFG[it.status]||{};
+    return `<div class="iter-row">
+      <div class="iter-dot" style="background:${cfg.dot||'#ccc'}"></div>
+      <div class="iter-ver">${e(it.ver)}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">
+          <span style="font-size:13px;font-weight:600">${e(it.title)}</span>${pill(it.status)}
+        </div>
+        <div style="font-size:11px;color:#9CA3AF">${fd(it.date)} · ${it.hrs}h logged</div>
+        ${it.notes?`<div style="font-size:12px;color:#4B5563;line-height:1.5;margin-top:4px">${e(it.notes)}</div>`:''}
+        ${it.changes&&it.changes.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${it.changes.map(c=>`<span class="tag">${e(c)}</span>`).join('')}</div>`:''}
+        ${it.feedback?`<div class="iter-feedback">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span><strong>Client feedback:</strong> ${e(it.feedback)}</span>
+        </div>`:''}
+      </div>
+    </div>`;
+  }).join(''):`<div style="text-align:center;padding:36px;color:#9CA3AF"><div style="font-size:28px;margin-bottom:8px">📋</div>No updates match this filter</div>`;
+
+  // Velocity chart
+  const vel=Object.entries(its.reduce((m,i)=>{const k=i.date.slice(5,7);m[k]=(m[k]||0)+1;return m;},{}))
+    .sort().map(([k,v])=>({m:k,c:v}));
+
+  return `<div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="back-btn" onclick="nav('dashboard')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All Contracts
+      </button>
+      <div style="width:1px;height:22px;background:#E8ECF0"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
+      <div><div class="topbar-title">${e(p.name)}</div><div class="topbar-sub">${e(p.client)} · ${e(p.cat)}</div></div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openIterModal()">+ Log Update</button>
+  </div>
+  <div class="content">
+    <div class="detail-stats">
+      <div class="dstat" style="border-top:3px solid ${p.color}">
+        <div class="dstat-lbl">Total Value</div>
+        <div class="dstat-val" style="font-size:20px">${fmt(p.budget)}</div>
+        <div class="dstat-sub">${e(p.rate)}</div>
+      </div>
+      <div class="dstat" style="border-top:3px solid #14A800">
+        <div class="dstat-lbl">Earned</div>
+        <div class="dstat-val" style="font-size:20px;color:#14A800">${fmt(earnedAmt)}</div>
+        <div class="dstat-sub">${Math.round(earnedAmt/p.budget*100)}% of contract</div>
+      </div>
+      <div class="dstat" style="border-top:3px solid #d97706">
+        <div class="dstat-lbl">Pending Payment</div>
+        <div class="dstat-val" style="font-size:20px;color:#d97706">${fmt(pendingAmt)}</div>
+        <div class="dstat-sub">${pendingAmt>0?'Delivered, awaiting payment':'Up to date'}</div>
+      </div>
+      <div class="dstat" style="border-top:3px solid ${p.color}">
+        <div class="dstat-lbl">Phases</div>
+        <div class="dstat-val" style="font-size:20px">${doneMs}/${p.milestones.length}</div>
+        <div class="dstat-sub">${its.length} updates · ${thrs(its)}h logged</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">Phase Tracker</span>
+          <span class="pill ${pc.pill||''}">${pc.lbl||p.status}</span>
+        </div>
+        <div class="card-body" style="padding-top:14px">
+          <div class="ms-timeline">${timeline}</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">About this Contract</span></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:#4B5563;line-height:1.6;margin-bottom:12px">${e(p.desc)}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">${(p.tags||[]).map(t=>`<span class="tag">${e(t)}</span>`).join('')}</div>
+            <div style="font-size:11px;color:#9CA3AF">Started ${fd(p.at)}</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Work Velocity</span></div>
+          <div class="card-body">${areaChart(vel,'m','c',p.color)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <span class="card-title">Activity Log (${its.length})</span>
+        <button class="btn btn-primary btn-sm" onclick="openIterModal()">+ Log Update</button>
+      </div>
+      <div class="card-body" style="padding-top:12px">
+        <div class="filter-row">${chips}</div>
+        ${rows}
+      </div>
+    </div>
+  </div>`;
+}
+function setPF(s){G.projFilter=s;render();}
+
+// ── EARNINGS VIEW ─────────────────────────────────────────────────────────────
+function earningsView(){
+  const ps=G.projects;
+  const totalEarned=ps.reduce((s,p)=>s+earned(p),0);
+  const totalPending=ps.reduce((s,p)=>s+pending(p),0);
+  const totalContracted=ps.reduce((s,p)=>s+p.budget,0);
+  const totalUpcoming=ps.reduce((s,p)=>s+p.milestones.filter(m=>m.status==='upcoming').reduce((ss,m)=>ss+m.price,0),0);
+
+  const allMs=[];
+  ps.forEach(p=>p.milestones.forEach(m=>allMs.push({proj:p,ms:m})));
+  const earnByP=ps.map(p=>({n:p.name.split(' ')[0].replace(',',''),c:earned(p)}));
+
+  const payRows=allMs.map(({proj:p,ms:m})=>{
+    const stPill=m.paid?'<span class="pill p-paid">Paid</span>':m.status==='upcoming'?'<span class="pill p-upcoming">Upcoming</span>':'<span class="pill p-pending">Pending</span>';
+    return `<div class="pay-row">
+      <div style="width:10px;height:10px;border-radius:50%;background:${p.color};flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600">${e(m.name)}</div>
+        <div style="font-size:11px;color:#9CA3AF">${e(p.name)} · ${e(p.client)}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-right:12px">
+        <div style="font-size:14px;font-weight:700">${fmt(m.price)}</div>
+        <div style="font-size:11px;color:#9CA3AF">Due ${fd(m.due)}</div>
+      </div>
+      ${stPill}
+    </div>`;
+  }).join('');
+
+  return `<div class="topbar">
+    <div><div class="topbar-title">Earnings</div><div class="topbar-sub">Payment tracking across all contracts</div></div>
+  </div>
+  <div class="content">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="dstat" style="border-top:3px solid #14A800">
+        <div class="dstat-lbl">Total Earned</div>
+        <div class="dstat-val" style="color:#14A800">${fmt(totalEarned)}</div>
+        <div class="dstat-sub">Paid phases</div>
+      </div>
+      <div class="dstat" style="border-top:3px solid #d97706">
+        <div class="dstat-lbl">Pending Payment</div>
+        <div class="dstat-val" style="color:#d97706">${fmt(totalPending)}</div>
+        <div class="dstat-sub">Delivered, not yet paid</div>
+      </div>
+      <div class="dstat" style="border-top:3px solid #6B7280">
+        <div class="dstat-lbl">Upcoming</div>
+        <div class="dstat-val">${fmt(totalUpcoming)}</div>
+        <div class="dstat-sub">Future phases</div>
+      </div>
+      <div class="dstat" style="border-top:3px solid #0ea5e9">
+        <div class="dstat-lbl">Total Contracted</div>
+        <div class="dstat-val">${fmt(totalContracted)}</div>
+        <div class="dstat-sub">${Math.round(totalEarned/totalContracted*100)}% collected to date</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:20px">
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Earnings by Contract</span></div>
+        <div class="card-body">${barChart(earnByP,'n','c','#14A800',130)}</div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Collection Progress</span></div>
+        <div class="card-body">
+          ${ps.map(p=>{const pct=p.budget?Math.round(earned(p)/p.budget*100):0;return `
+            <div style="margin-bottom:13px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px">${e(p.name.split('—')[0].trim())}</span>
+                <span style="font-size:12px;font-weight:700;color:${p.color}">${pct}%</span>
+              </div>
+              <div class="pbar"><div class="pfill" style="width:${pct}%;background:${p.color}"></div></div>
+              <div style="font-size:10px;color:#9CA3AF;margin-top:2px">${fmt(earned(p))} of ${fmt(p.budget)}</div>
+            </div>`;}).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><span class="card-title">Payment Schedule — All Phases</span></div>
+      <div class="card-body">${payRows}</div>
+    </div>
+  </div>`;
+}
+
+// ── CONTRACT BUILDER ──────────────────────────────────────────────────────────
+function contractBuilderView(){
+  const d=G.draft,totBud=pd(d.budget),msTotal=d.milestones.reduce((s,m)=>s+pd(m.price),0),rem=totBud-msTotal;
+
+  if(G.contractOk)return `<div class="topbar"><div><div class="topbar-title">New Contract</div></div></div>
+    <div class="content">
+      <div class="success-banner">
+        <span style="font-size:28px">✅</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#15803d;margin-bottom:4px">Contract Created!</div>
+          <div style="font-size:13px;color:#4B5563">"${e(d.name)}" has been added to your dashboard.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-primary" onclick="nav('dashboard')">View Dashboard</button>
+        <button class="btn btn-outline" onclick="resetDraft()">Create Another</button>
+      </div>
+    </div>`;
+
+  const msCards=d.milestones.map((m,mi)=>{
+    const col=MCOLS[m.ci||0],pr=pd(m.price),pct=totBud>0?Math.round((pr/totBud)*100):0;
+    const delRows=m.dels.map((del,di)=>`
+      <div class="del-row">
+        <span style="font-size:11px;color:#9CA3AF;min-width:16px">${di+1}.</span>
+        <input class="del-inp" value="${e(del)}" placeholder="Deliverable item…" onchange="updDel(${mi},${di},this.value)"/>
+        ${m.dels.length>1?`<button class="btn-ghost" style="font-size:13px" onclick="rmDel(${mi},${di})">✕</button>`:''}
+      </div>`).join('');
+    return `<div class="ms-card" style="background:${col.bg};border-color:${col.bd}">
+      <div class="ms-hd" onclick="togMs(${mi})">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:24px;height:24px;border-radius:50%;background:${col.fill};color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${mi+1}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:${col.tx}">${m.name||'Phase '+(mi+1)}</div>
+            <div style="font-size:11px;color:${col.tx};opacity:.7">${pr>0?fmt(pr)+' · '+(pct+'%'):'No price set'} ${m.due?'· Due '+fd(m.due):''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="color:${col.tx};font-size:12px">${m.open?'▲':'▼'}</span>
+          ${d.milestones.length>1?`<button class="btn-ghost btn-danger btn-sm" onclick="event.stopPropagation();rmMs(${mi})">✕</button>`:''}
+        </div>
+      </div>
+      ${m.open?`<div class="ms-body-form">
+        <div class="frow" style="margin-bottom:10px">
+          <div><label class="flbl">Phase Name</label><input class="fi" value="${e(m.name)}" placeholder="e.g. MVP Delivery" onchange="updMs(${mi},'name',this.value)"/></div>
+          <div><label class="flbl">Price</label><input class="fi" value="${e(m.price)}" placeholder="$1,000" onchange="updMs(${mi},'price',this.value)"/></div>
+        </div>
+        <div class="frow" style="margin-bottom:10px">
+          <div><label class="flbl">Due Date</label><input class="fi" type="date" value="${e(m.due)}" onchange="updMs(${mi},'due',this.value)"/></div>
+          <div><label class="flbl">Notes</label><input class="fi" value="${e(m.desc)}" placeholder="Optional" onchange="updMs(${mi},'desc',this.value)"/></div>
+        </div>
+        <label class="flbl">Deliverables</label>${delRows}
+        <button class="btn btn-outline btn-sm" style="margin-top:6px" onclick="addDel(${mi})">+ Add Deliverable</button>
+      </div>`:``}
+    </div>`;
+  }).join('');
+
+  return `<div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="back-btn" onclick="nav('dashboard')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back
+      </button>
+      <div style="width:1px;height:22px;background:#E8ECF0"></div>
+      <div><div class="topbar-title">New Contract</div><div class="topbar-sub">Phase-based contract setup</div></div>
+    </div>
+  </div>
+  <div class="content">
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start">
+      <div>
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-hd"><span class="card-title">Contract Details</span></div>
+          <div class="card-body">
+            <div class="frow">
+              <div class="fg"><label class="flbl">Contract Name <span class="req">*</span></label>
+                <input class="fi" value="${e(d.name)}" placeholder="e.g. Brand Identity Sprint" onchange="updD('name',this.value)"/></div>
+              <div class="fg"><label class="flbl">Client <span class="req">*</span></label>
+                <input class="fi" value="${e(d.client)}" placeholder="e.g. H9 Partners" onchange="updD('client',this.value)"/></div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label class="flbl">Category</label>
+                <select class="fi" onchange="updD('cat',this.value)">${CATS.map(c=>`<option ${d.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+              <div class="fg"><label class="flbl">Rate Type</label>
+                <select class="fi" onchange="updD('rateType',this.value)">${RTYPES.map(r=>`<option ${d.rateType===r?'selected':''}>${r}</option>`).join('')}</select></div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label class="flbl">Total Budget</label>
+                <input class="fi" value="${e(d.budget)}" placeholder="e.g. 2000" onchange="updD('budget',this.value)"/></div>
+              <div class="fg"><label class="flbl">Description</label>
+                <input class="fi" value="${e(d.desc)}" placeholder="Brief scope summary…" onchange="updD('desc',this.value)"/></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec-hd">
+          <span class="sec-title">Phases</span>
+          <button class="btn btn-outline btn-sm" onclick="addMs()">+ Add Phase</button>
+        </div>
+        ${msCards}
+      </div>
+
+      <div style="position:sticky;top:76px">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-hd"><span class="card-title">Budget Breakdown</span></div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #F0F4F8">
+              <span style="color:#9CA3AF">Total Budget</span><span style="font-weight:700">${totBud>0?fmt(totBud):'—'}</span>
+            </div>
+            ${d.milestones.map((m,i)=>`
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #F5F7FA">
+              <span style="color:#4B5563">M${i+1}: ${m.name||'Phase '+(i+1)}</span>
+              <span style="font-weight:600">${pd(m.price)>0?fmt(pd(m.price)):'—'}</span>
+            </div>`).join('')}
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:7px 0;font-weight:700;${rem<0?'color:#dc2626':''}">
+              <span>Remaining</span><span>${totBud>0?fmt(rem):'—'}</span>
+            </div>
+            ${rem<0?`<div style="font-size:11px;color:#dc2626;background:#FEF2F2;padding:6px 10px;border-radius:7px">⚠ Exceeds budget by ${fmt(Math.abs(rem))}</div>`:''}
+          </div>
+        </div>
+
+        <div class="summary-box">
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:12px">Contract Summary</div>
+          <div class="sline"><span class="slbl">Contract</span><span class="sval">${d.name||'—'}</span></div>
+          <div class="sline"><span class="slbl">Client</span><span class="sval">${d.client||'—'}</span></div>
+          <div class="sline"><span class="slbl">Phases</span><span class="sval">${d.milestones.length}</span></div>
+          <div class="sline"><span class="slbl">Type</span><span class="sval">${d.rateType}</span></div>
+          <div class="sline"><span class="slbl">Total Value</span><span class="sval" style="color:#4ade80;font-size:16px">${totBud>0?fmt(totBud):'—'}</span></div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;margin-top:14px;justify-content:center;padding:12px;font-size:14px" onclick="submitContract()">
+          Create Contract →
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// contract actions
+function updD(k,v){G.draft[k]=v;render();}
+function addMs(){const i=G.draft.milestones.length;G.draft.milestones.push({id:Date.now(),name:'',desc:'',price:'',due:'',dels:[''],open:true,ci:i%MCOLS.length});render();}
+function rmMs(mi){G.draft.milestones.splice(mi,1);render();}
+function togMs(mi){G.draft.milestones[mi].open=!G.draft.milestones[mi].open;render();}
+function updMs(mi,k,v){G.draft.milestones[mi][k]=v;render();}
+function addDel(mi){G.draft.milestones[mi].dels.push('');render();}
+function rmDel(mi,di){G.draft.milestones[mi].dels.splice(di,1);render();}
+function updDel(mi,di,v){G.draft.milestones[mi].dels[di]=v;}
+function submitContract(){
+  const d=G.draft;
+  if(!d.name.trim()||!d.client.trim()){alert('Contract Name and Client are required.');return;}
+  const nid=++G.nextId,ci=G.projects.length%PCOLS.length;
+  const ms=d.milestones.map((m,i)=>({id:i+1,name:m.name||'Phase '+(i+1),price:pd(m.price),status:'upcoming',paid:false,due:m.due,dels:m.dels.filter(Boolean)}));
+  if(ms.length>0)ms[0].status='in-progress';
+  G.projects.push({id:nid,name:d.name.trim(),client:d.client.trim(),
+    desc:d.desc.trim()||d.rateType+' · '+d.milestones.length+' milestones',
+    status:'active',budget:pd(d.budget)||0,rate:d.rateType,color:PCOLS[ci],cat:d.cat,
+    tags:[d.rateType.toLowerCase().split('-')[0].trim(),d.cat.toLowerCase().split('/')[0].trim()],
+    at:new Date().toISOString().slice(0,10),milestones:ms});
+  G.contractOk=true;
+  render();
+  updateContractNav();
+}
+function resetDraft(){
+  G.draft={name:'',client:'H9 Partners',cat:'Product Design',desc:'',rateType:'Phase-Based',budget:'',
+    milestones:[{id:Date.now(),name:'',desc:'',price:'',due:'',dels:[''],open:true,ci:0}]};
+  G.contractOk=false;render();
+}
+
+// ── ITERATION MODAL ───────────────────────────────────────────────────────────
+let iterStarRating=4;
+function setStarRating(id,val){iterStarRating=val;document.querySelectorAll('#star-input-iter .star').forEach((s,i)=>{s.className='star '+(i<val?'filled':'empty');});}
+function openIterModal(){
+  const p=G.projects.find(p=>p.id===G.selPid);if(!p)return;
+  iterStarRating=4;
+  const its=piters(p.id);
+  const last=its.length?its[its.length-1].ver:'v0.0';
+  const m=last.match(/(\d+)\.(\d+)/);
+  const next=m?'v'+m[1]+'.'+(parseInt(m[2])+1):'v0.1';
+  document.getElementById('mc').innerHTML=`
+  <div class="modal-bg" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-hd">
+        <span class="modal-title">Log Update — ${e(p.name)}</span>
+        <button class="btn-ghost" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="frow">
+          <div class="fg"><label class="flbl">Version <span class="req">*</span></label>
+            <input class="fi" id="iv" value="${e(next)}" placeholder="v1.2"/></div>
+          <div class="fg"><label class="flbl">Status</label>
+            <select class="fi" id="is">
+              <option value="in-progress">In Progress</option>
+              <option value="review">Under Review</option>
+              <option value="testing">QA / Testing</option>
+              <option value="complete">Delivered</option>
+              <option value="blocked">Blocked</option>
+            </select></div>
+        </div>
+        <div class="fg"><label class="flbl">Title <span class="req">*</span></label>
+          <input class="fi" id="it" placeholder="e.g. High-Fidelity Mockups — Round 2"/></div>
+        <div class="frow">
+          <div class="fg"><label class="flbl">Hours Logged</label>
+            <input class="fi" id="ih" type="number" placeholder="8"/></div>
+          <div class="fg"><label class="flbl">Date</label>
+            <input class="fi" id="id" type="date" value="${new Date().toISOString().slice(0,10)}"/></div>
+        </div>
+        <div class="fg"><label class="flbl">Notes</label>
+          <textarea class="fi" id="in" rows="3" placeholder="What was done, decisions made, blockers…" style="resize:vertical;min-height:72px"></textarea></div>
+        <div class="fg"><label class="flbl">Client Feedback</label>
+          <textarea class="fi" id="ifb" rows="2" placeholder="Paste client feedback or comments here…" style="resize:vertical;min-height:52px"></textarea></div>
+        <div class="fg"><label class="flbl">Feedback Rating</label>
+          <div id="star-input-iter" class="star-input">${[1,2,3,4,5].map(i=>`<span class="star ${i<=4?'filled':'empty'}" onclick="setStarRating(0,${i})">★</span>`).join('')}</div>
+          <div style="font-size:10px;color:#9CA3AF;margin-top:3px">Rate client feedback (only saved if feedback text is provided)</div>
+        </div>
+      </div>
+      <div class="modal-ft">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveIter()">Save Iteration</button>
+      </div>
+    </div>
+  </div>`;
+}
+function saveIter(){
+  const ver=document.getElementById('iv').value.trim();
+  const title=document.getElementById('it').value.trim();
+  if(!ver||!title){alert('Version and Title are required.');return;}
+  const iterId=++G.nextId;
+  const fbText=document.getElementById('ifb').value.trim();
+  const date=document.getElementById('id').value||new Date().toISOString().slice(0,10);
+  G.iters.push({id:iterId,pid:G.selPid,ver,title,
+    status:document.getElementById('is').value,
+    hrs:parseFloat(document.getElementById('ih').value)||0,
+    date:date,
+    notes:document.getElementById('in').value.trim(),
+    feedback:fbText,
+    changes:[]});
+  // Create feedback entry if feedback text provided
+  if(fbText){
+    const p=G.projects.find(p=>p.id===G.selPid);
+    G.feedback.push({id:G.nextFeedbackId++,pid:G.selPid,iterId:iterId,msId:null,
+      from:p?p.client:'Client',date:date,rating:iterStarRating,text:fbText,response:null,respondedAt:null});
+  }
+  closeModal();render();
+}
+function closeModal(){document.getElementById('mc').innerHTML='';}
+
+// ── AVAILABLE WORK VIEW ──────────────────────────────────────────────────────
+function availableWorkView(){
+  const open=G.available.filter(a=>a.status==='open');
+  return `<div class="topbar">
+    <div><div class="topbar-title">Open Contracts</div><div class="topbar-sub">${open.length} contract${open.length!==1?'s':''} available from H9 Partners</div></div>
+  </div>
+  <div class="content">
+    ${open.length===0?`<div class="avail-empty"><div class="avail-empty-icon">📋</div><div style="font-size:15px;font-weight:600;margin-bottom:6px">No contracts available right now</div><div style="font-size:13px">Check back soon — your boss will post new opportunities here.</div></div>`:''}
+    ${open.map(a=>{
+      const uc=URGCFG[a.urgency]||URGCFG['medium'];
+      const msCount=a.milestones.length;
+      const totalMs=a.milestones.reduce((s,m)=>s+m.price,0);
+      return `<div class="avail-card" style="border-left:4px solid ${uc.color}">
+        <div class="avail-top">
+          <div class="cc-icon" style="background:${uc.color}">${a.name.slice(0,1)}</div>
+          <div class="avail-info">
+            <div class="avail-name">${e(a.name)}</div>
+            <div class="avail-desc">${e(a.desc)}</div>
+            <div class="avail-meta">
+              <span>${e(a.cat)}</span>
+              <span>Posted ${fd(a.postedAt)}</span>
+              <span>${msCount} milestone${msCount!==1?'s':''}</span>
+            </div>
+          </div>
+          <div class="avail-right">
+            <div class="avail-budget">${fmt(a.budget)}</div>
+            <div class="avail-ms-count">${msCount} milestones</div>
+          </div>
+        </div>
+        <div style="padding:0 20px 14px">
+          ${a.milestones.map((m,i)=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #F5F7FA;font-size:12px">
+            <span style="color:#4B5563">M${i+1}: ${e(m.name)}</span>
+            <span style="font-weight:600">${fmt(m.price)}</span>
+          </div>`).join('')}
+        </div>
+        <div class="avail-bottom">
+          <div style="display:flex;gap:6px;align-items:center">${urgPill(a.urgency)} ${avPill(a.status)}</div>
+          <button class="accept-btn" onclick="openAcceptModal(${a.id})">Accept &amp; Start</button>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+function openAcceptModal(availId){
+  const a=G.available.find(x=>x.id===availId);if(!a)return;
+  document.getElementById('mc').innerHTML=`
+  <div class="modal-bg" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-hd">
+        <span class="modal-title">Accept Contract?</span>
+        <button class="btn-ghost" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:14px;font-weight:700;margin-bottom:8px">${e(a.name)}</div>
+        <div style="font-size:12px;color:#6B7280;line-height:1.6;margin-bottom:14px">${e(a.desc)}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="dstat"><div class="dstat-lbl">Budget</div><div class="dstat-val" style="font-size:18px">${fmt(a.budget)}</div></div>
+          <div class="dstat"><div class="dstat-lbl">Phases</div><div class="dstat-val" style="font-size:18px">${a.milestones.length}</div></div>
+        </div>
+        <div style="font-size:12px;color:#6B7280">This will add the contract to your active projects. The first milestone will be set to "In Progress".</div>
+      </div>
+      <div class="modal-ft">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="acceptContract(${a.id})">Accept &amp; Start</button>
+      </div>
+    </div>
+  </div>`;
+}
+function acceptContract(availId){
+  const avail=G.available.find(a=>a.id===availId);
+  if(!avail||avail.status!=='open')return;
+  avail.status='claimed';avail.claimedBy='contractor';avail.claimedAt=new Date().toISOString().slice(0,10);
+  const nid=++G.nextId,ci=G.projects.length%PCOLS.length;
+  const milestones=avail.milestones.map((m,i)=>({id:m.id,name:m.name,price:m.price,
+    status:i===0?'in-progress':'upcoming',paid:false,due:m.due,dels:m.dels?[...m.dels]:[]}));
+  G.projects.push({id:nid,name:avail.name,client:'H9 Partners',desc:avail.desc,
+    status:'active',color:PCOLS[ci],cat:avail.cat,
+    tags:[avail.cat.toLowerCase().split('/')[0].trim(),avail.urgency],
+    at:new Date().toISOString().slice(0,10),budget:avail.budget,rate:'Phase-Based',milestones:milestones,fromAvailId:availId});
+  closeModal();nav('contract',nid);
+}
+
+// ── FEEDBACK VIEW ────────────────────────────────────────────────────────────
+function feedbackView(){
+  let fbs=[...G.feedback];
+  // Filter
+  if(G.feedbackFilter!=='all'){
+    if(typeof G.feedbackFilter==='number'||/^\d+$/.test(G.feedbackFilter)){
+      const pid=parseInt(G.feedbackFilter);fbs=fbs.filter(f=>f.pid===pid);
+    } else if(/^star-\d$/.test(G.feedbackFilter)){
+      const r=parseInt(G.feedbackFilter.split('-')[1]);fbs=fbs.filter(f=>f.rating===r);
+    }
+  }
+  // Sort
+  if(G.feedbackSort==='oldest')fbs.sort((a,b)=>a.date.localeCompare(b.date));
+  else if(G.feedbackSort==='highest')fbs.sort((a,b)=>b.rating-a.rating);
+  else if(G.feedbackSort==='lowest')fbs.sort((a,b)=>a.rating-b.rating);
+  else fbs.sort((a,b)=>b.date.localeCompare(a.date));
+
+  const allFb=G.feedback;
+  const avg=avgRating(allFb);
+  const sb=sentimentBreakdown(allFb);
+  const ratingDist=[5,4,3,2,1].map(r=>({r,c:allFb.filter(f=>f.rating===r).length}));
+  const maxDist=Math.max(...ratingDist.map(d=>d.c),1);
+
+  // Unique projects with feedback
+  const projIds=[...new Set(allFb.map(f=>f.pid))];
+  const projChips=projIds.map(pid=>{const p=G.projects.find(x=>x.id===pid);return p?`<button class="chip ${G.feedbackFilter==pid?'on':''}" onclick="setFbFilter(${pid})">${e(p.name.split('—')[0].split(' ').slice(0,2).join(' '))}</button>`:''}).join('');
+
+  const cards=fbs.map(f=>{
+    const p=G.projects.find(x=>x.id===f.pid);
+    return `<div class="fb-card">
+      <div class="fb-card-top">
+        <div class="fb-card-rating">
+          <div style="font-size:24px;font-weight:800;color:#1a1a2e">${f.rating}</div>
+          <div>${starsHtml(f.rating)}</div>
+        </div>
+        <div class="fb-card-body">
+          <div class="fb-card-from">${e(f.from)}</div>
+          <div class="fb-card-context">${p?e(p.name):''} · ${fd(f.date)}</div>
+          <div class="fb-card-text">${e(f.text)}</div>
+        </div>
+      </div>
+      ${f.response?`<div class="fb-response">
+        <div class="fb-response-label">Your Response · ${fd(f.respondedAt)}</div>
+        ${e(f.response)}
+      </div>`:`<div style="padding:0 20px 14px"><button class="btn btn-outline btn-sm" onclick="openRespondModal(${f.id})">Respond</button></div>`}
+    </div>`;
+  }).join('');
+
+  return `<div class="topbar">
+    <div><div class="topbar-title">Feedback</div><div class="topbar-sub">${allFb.length} total feedback entries across all contracts</div></div>
+  </div>
+  <div class="content">
+    <div class="fb-hero">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:18px;font-weight:700">Feedback Overview</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">${allFb.length} reviews from ${projIds.length} clients</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:32px;font-weight:800">${avg.toFixed(1)}</div>
+          <div>${starsHtml(Math.round(avg))}</div>
+        </div>
+      </div>
+      <div class="fb-stats">
+        <div class="fb-stat">
+          <div class="earn-lbl">Average Rating</div>
+          <div class="earn-val">${avg.toFixed(1)}/5</div>
+          <div>${starsHtml(Math.round(avg))}</div>
+        </div>
+        <div class="fb-stat">
+          <div class="earn-lbl">Positive</div>
+          <div class="earn-val" style="color:#4ade80">${sb.pos}</div>
+          <div class="earn-sub">${sb.total?Math.round(sb.pos/sb.total*100):0}% of feedback</div>
+        </div>
+        <div class="fb-stat">
+          <div class="earn-lbl">Neutral</div>
+          <div class="earn-val" style="color:#fbbf24">${sb.neu}</div>
+          <div class="earn-sub">${sb.total?Math.round(sb.neu/sb.total*100):0}% of feedback</div>
+        </div>
+        <div class="fb-stat">
+          <div class="earn-lbl">Rating Distribution</div>
+          ${ratingDist.map(d=>`<div class="rating-bar-row">
+            <span class="rating-bar-label">${d.r}★</span>
+            <div class="rating-bar"><div class="rating-bar-fill" style="width:${Math.round(d.c/maxDist*100)}%"></div></div>
+            <span class="rating-bar-count">${d.c}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div class="filter-row" style="margin-bottom:0">
+        <button class="chip ${G.feedbackFilter==='all'?'on':''}" onclick="setFbFilter('all')">All ${allFb.length}</button>
+        ${projChips}
+        ${[5,4,3,2,1].map(r=>`<button class="chip ${G.feedbackFilter==='star-'+r?'on':''}" onclick="setFbFilter('star-${r}')">${r}★</button>`).join('')}
+      </div>
+      <select class="fi" style="width:auto;padding:5px 10px;font-size:11px" onchange="setFbSort(this.value)">
+        <option value="newest" ${G.feedbackSort==='newest'?'selected':''}>Newest first</option>
+        <option value="oldest" ${G.feedbackSort==='oldest'?'selected':''}>Oldest first</option>
+        <option value="highest" ${G.feedbackSort==='highest'?'selected':''}>Highest rated</option>
+        <option value="lowest" ${G.feedbackSort==='lowest'?'selected':''}>Lowest rated</option>
+      </select>
+    </div>
+
+    ${fbs.length?cards:`<div class="fb-empty"><div style="font-size:36px;margin-bottom:10px">💬</div><div style="font-size:14px;font-weight:600;margin-bottom:4px">No feedback matches this filter</div></div>`}
+  </div>`;
+}
+function setFbFilter(v){G.feedbackFilter=v;render();}
+function setFbSort(v){G.feedbackSort=v;render();}
+function openRespondModal(fbId){
+  const f=G.feedback.find(x=>x.id===fbId);if(!f)return;
+  document.getElementById('mc').innerHTML=`
+  <div class="modal-bg" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-hd">
+        <span class="modal-title">Respond to Feedback</span>
+        <button class="btn-ghost" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:12px;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px">${e(f.from)} · ${starsHtml(f.rating)}</div>
+          <div style="font-size:13px;color:#78350f">${e(f.text)}</div>
+        </div>
+        <div class="fg"><label class="flbl">Your Response</label>
+          <textarea class="fi" id="fb-resp" rows="3" placeholder="Type your response…" style="resize:vertical;min-height:72px"></textarea></div>
+      </div>
+      <div class="modal-ft">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveResponse(${f.id})">Save Response</button>
+      </div>
+    </div>
+  </div>`;
+}
+function saveResponse(fbId){
+  const f=G.feedback.find(x=>x.id===fbId);if(!f)return;
+  const resp=document.getElementById('fb-resp').value.trim();
+  if(!resp){alert('Please type a response.');return;}
+  f.response=resp;f.respondedAt=new Date().toISOString().slice(0,10);
+  closeModal();render();
+}
+
+// ── BOSS VIEWS ───────────────────────────────────────────────────────────────
+function bossView(){
+  const all=G.available;
+  const open=all.filter(a=>a.status==='open');
+  const claimed=all.filter(a=>a.status==='claimed');
+  const expired=all.filter(a=>a.status==='expired');
+  const totalBudget=all.reduce((s,a)=>s+a.budget,0);
+  const filt=G.bossFilter||'all';
+  const shown=filt==='all'?all:all.filter(a=>a.status===filt);
+
+  const cards=shown.map(a=>{
+    const uc=URGCFG[a.urgency]||URGCFG['medium'];
+    return `<div class="boss-posted">
+      <div class="boss-posted-top">
+        <div>
+          <div class="boss-posted-name">${e(a.name)}</div>
+          <div class="boss-posted-meta">${e(a.cat)} · ${fmt(a.budget)} · Posted ${fd(a.postedAt)}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${urgPill(a.urgency)} ${avPill(a.status)}
+          ${a.status==='open'?`<button class="btn btn-danger btn-sm" onclick="bossExpireContract(${a.id})">Expire</button>`:''}
+        </div>
+      </div>
+      ${a.status==='claimed'?`<div style="padding:0 18px 12px;font-size:12px;color:#0ea5e9;font-weight:600">Claimed by Jacob H. on ${fd(a.claimedAt)}</div>`:''}
+    </div>`;
+  }).join('');
+
+  // Active contractor projects (read-only)
+  const activeProjs=G.projects.filter(p=>p.status==='active');
+
+  return `<div class="topbar">
+    <div><div class="topbar-title">Boss Dashboard</div><div class="topbar-sub">H9 Partners — Contract Management</div></div>
+    <button class="btn btn-primary" onclick="nav('boss-post')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Post Contract
+    </button>
+  </div>
+  <div class="content">
+    <div class="boss-hero">
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">Contract Management</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4)">Post and manage contracts for your contractor</div>
+      <div class="boss-stats">
+        <div class="boss-stat">
+          <div class="earn-lbl">Total Posted</div>
+          <div class="earn-val">${all.length}</div>
+        </div>
+        <div class="boss-stat">
+          <div class="earn-lbl">Open</div>
+          <div class="earn-val" style="color:#4ade80">${open.length}</div>
+        </div>
+        <div class="boss-stat">
+          <div class="earn-lbl">Claimed</div>
+          <div class="earn-val" style="color:#7dd3fc">${claimed.length}</div>
+        </div>
+        <div class="boss-stat">
+          <div class="earn-lbl">Total Budget</div>
+          <div class="earn-val">${fmt(totalBudget)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-hd">
+      <span class="sec-title">Posted Contracts</span>
+      <div class="filter-row" style="margin-bottom:0">
+        ${['all','open','claimed','expired'].map(f=>`<button class="chip ${filt===f?'on':''}" onclick="G.bossFilter='${f}';render()">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)} ${f==='all'?all.length:f==='open'?open.length:f==='claimed'?claimed.length:expired.length}</button>`).join('')}
+      </div>
+    </div>
+    ${shown.length?cards:`<div class="avail-empty" style="padding:30px"><div style="font-size:14px;color:#9CA3AF">No contracts match this filter</div></div>`}
+
+    <div class="sec-hd" style="margin-top:20px">
+      <span class="sec-title">Contractor Active Projects (${activeProjs.length})</span>
+    </div>
+    ${activeProjs.map(p=>`<div class="boss-contractor-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
+        <span style="font-size:13px;font-weight:700">${e(p.name)}</span>
+        ${pill(null,'p')}
+      </div>
+      <div style="display:flex;gap:16px;font-size:11px;color:#9CA3AF">
+        <span>Budget: ${fmt(p.budget)}</span>
+        <span>Earned: ${fmt(earned(p))}</span>
+        <span>Phases: ${p.milestones.filter(m=>m.status==='complete').length}/${p.milestones.length}</span>
+        <span>${msProgress(p)}% complete</span>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+function bossExpireContract(id){
+  const a=G.available.find(x=>x.id===id);
+  if(a)a.status='expired';
+  render();
+}
+
+// Boss Post Contract View
+function bossPostView(){
+  const d=G.bossDraft,totBud=pd(d.budget),msTotal=d.milestones.reduce((s,m)=>s+pd(m.price),0),rem=totBud-msTotal;
+
+  const msCards=d.milestones.map((m,mi)=>{
+    const col=MCOLS[m.ci||0],pr=pd(m.price),pct=totBud>0?Math.round((pr/totBud)*100):0;
+    const delRows=m.dels.map((del,di)=>`
+      <div class="del-row">
+        <span style="font-size:11px;color:#9CA3AF;min-width:16px">${di+1}.</span>
+        <input class="del-inp" value="${e(del)}" placeholder="Deliverable item…" onchange="bossUpdDel(${mi},${di},this.value)"/>
+        ${m.dels.length>1?`<button class="btn-ghost" style="font-size:13px" onclick="bossRmDel(${mi},${di})">✕</button>`:''}
+      </div>`).join('');
+    return `<div class="ms-card" style="background:${col.bg};border-color:${col.bd}">
+      <div class="ms-hd" onclick="bossTogMs(${mi})">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:24px;height:24px;border-radius:50%;background:${col.fill};color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${mi+1}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:${col.tx}">${m.name||'Phase '+(mi+1)}</div>
+            <div style="font-size:11px;color:${col.tx};opacity:.7">${pr>0?fmt(pr)+' · '+(pct+'%'):'No price set'}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="color:${col.tx};font-size:12px">${m.open?'▲':'▼'}</span>
+          ${d.milestones.length>1?`<button class="btn-ghost btn-danger btn-sm" onclick="event.stopPropagation();bossRmMs(${mi})">✕</button>`:''}
+        </div>
+      </div>
+      ${m.open?`<div class="ms-body-form">
+        <div class="frow" style="margin-bottom:10px">
+          <div><label class="flbl">Name</label><input class="fi" value="${e(m.name)}" placeholder="e.g. Discovery Phase" onchange="bossUpdMs(${mi},'name',this.value)"/></div>
+          <div><label class="flbl">Price</label><input class="fi" value="${e(m.price)}" placeholder="$1,000" onchange="bossUpdMs(${mi},'price',this.value)"/></div>
+        </div>
+        <div class="fg"><label class="flbl">Due Date</label><input class="fi" type="date" value="${e(m.due)}" onchange="bossUpdMs(${mi},'due',this.value)"/></div>
+        <label class="flbl">Deliverables</label>${delRows}
+        <button class="btn btn-outline btn-sm" style="margin-top:6px" onclick="bossAddDel(${mi})">+ Add Deliverable</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+
+  return `<div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="back-btn" onclick="nav('boss-dashboard')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back
+      </button>
+      <div style="width:1px;height:22px;background:#E8ECF0"></div>
+      <div><div class="topbar-title">Post New Contract</div><div class="topbar-sub">Create an opportunity for your contractor</div></div>
+    </div>
+  </div>
+  <div class="content">
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:22px;align-items:start">
+      <div>
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-hd"><span class="card-title">Contract Details</span></div>
+          <div class="card-body">
+            <div class="fg"><label class="flbl">Contract Name <span class="req">*</span></label>
+              <input class="fi" value="${e(d.name)}" placeholder="e.g. Brand Identity System" onchange="updBD('name',this.value)"/></div>
+            <div class="fg"><label class="flbl">Description</label>
+              <textarea class="fi" rows="2" style="resize:vertical" placeholder="Describe the scope…" onchange="updBD('desc',this.value)">${e(d.desc)}</textarea></div>
+            <div class="frow">
+              <div class="fg"><label class="flbl">Category</label>
+                <select class="fi" onchange="updBD('cat',this.value)">${CATS.map(c=>`<option ${d.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+              <div class="fg"><label class="flbl">Urgency</label>
+                <select class="fi" onchange="updBD('urgency',this.value)">
+                  <option ${d.urgency==='low'?'selected':''} value="low">Low</option>
+                  <option ${d.urgency==='medium'?'selected':''} value="medium">Medium</option>
+                  <option ${d.urgency==='high'?'selected':''} value="high">High</option>
+                </select></div>
+            </div>
+            <div class="fg"><label class="flbl">Total Budget</label>
+              <input class="fi" value="${e(d.budget)}" placeholder="e.g. 4500" onchange="updBD('budget',this.value)"/></div>
+          </div>
+        </div>
+        <div class="sec-hd">
+          <span class="sec-title">Phases</span>
+          <button class="btn btn-outline btn-sm" onclick="bossAddMs()">+ Add Phase</button>
+        </div>
+        ${msCards}
+      </div>
+      <div style="position:sticky;top:76px">
+        <div class="summary-box">
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:12px">Contract Summary</div>
+          <div class="sline"><span class="slbl">Name</span><span class="sval">${d.name||'—'}</span></div>
+          <div class="sline"><span class="slbl">Category</span><span class="sval">${d.cat}</span></div>
+          <div class="sline"><span class="slbl">Urgency</span><span class="sval">${(URGCFG[d.urgency]||{}).lbl||d.urgency}</span></div>
+          <div class="sline"><span class="slbl">Phases</span><span class="sval">${d.milestones.length}</span></div>
+          <div class="sline"><span class="slbl">Total Budget</span><span class="sval" style="color:#4ade80;font-size:16px">${totBud>0?fmt(totBud):'—'}</span></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:14px;justify-content:center;padding:12px;font-size:14px" onclick="bossPostContract()">
+          Post Contract →
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+function updBD(k,v){G.bossDraft[k]=v;render();}
+function bossAddMs(){const i=G.bossDraft.milestones.length;G.bossDraft.milestones.push({id:Date.now(),name:'',price:'',due:'',dels:[''],open:true,ci:i%MCOLS.length});render();}
+function bossRmMs(mi){G.bossDraft.milestones.splice(mi,1);render();}
+function bossTogMs(mi){G.bossDraft.milestones[mi].open=!G.bossDraft.milestones[mi].open;render();}
+function bossUpdMs(mi,k,v){G.bossDraft.milestones[mi][k]=v;render();}
+function bossAddDel(mi){G.bossDraft.milestones[mi].dels.push('');render();}
+function bossRmDel(mi,di){G.bossDraft.milestones[mi].dels.splice(di,1);render();}
+function bossUpdDel(mi,di,v){G.bossDraft.milestones[mi].dels[di]=v;}
+function bossPostContract(){
+  const d=G.bossDraft;
+  if(!d.name.trim()){alert('Contract Name is required.');return;}
+  const ms=d.milestones.map((m,i)=>({id:i+1,name:m.name||'Phase '+(i+1),price:pd(m.price),due:m.due,dels:m.dels.filter(Boolean)}));
+  G.available.push({id:G.nextAvailId++,name:d.name.trim(),desc:d.desc.trim(),budget:pd(d.budget)||0,
+    cat:d.cat,urgency:d.urgency,status:'open',postedAt:new Date().toISOString().slice(0,10),
+    claimedBy:null,claimedAt:null,milestones:ms});
+  G.bossDraft={name:'',desc:'',budget:'',cat:'Product Design',urgency:'medium',
+    milestones:[{id:Date.now(),name:'',price:'',due:'',dels:[''],open:true,ci:0}]};
+  nav('boss-dashboard');
+}
+
+// Boss Contractor Overview
+function bossOverviewView(){
+  const ps=G.projects;
+  const totalEarned=ps.reduce((s,p)=>s+earned(p),0);
+  const totalBudget=ps.reduce((s,p)=>s+p.budget,0);
+  const completedCount=ps.filter(p=>p.status==='complete').length;
+  const avgR=avgRating(G.feedback);
+
+  return `<div class="topbar">
+    <div><div class="topbar-title">Contractor Overview</div><div class="topbar-sub">Jacob H. — Performance Summary</div></div>
+  </div>
+  <div class="content">
+    <div class="boss-hero">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+        <div class="avatar" style="width:48px;height:48px;font-size:16px">JH</div>
+        <div>
+          <div style="font-size:18px;font-weight:700">Jacob H.</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5)">Freelance Designer · ${ps.length} contracts</div>
+        </div>
+      </div>
+      <div class="boss-stats">
+        <div class="boss-stat">
+          <div class="earn-lbl">Total Earned</div>
+          <div class="earn-val">${fmt(totalEarned)}</div>
+        </div>
+        <div class="boss-stat">
+          <div class="earn-lbl">Completed</div>
+          <div class="earn-val">${completedCount}</div>
+        </div>
+        <div class="boss-stat">
+          <div class="earn-lbl">Avg Rating</div>
+          <div class="earn-val">${avgR.toFixed(1)}</div>
+          <div>${starsHtml(Math.round(avgR))}</div>
+        </div>
+        <div class="boss-stat">
+          <div class="earn-lbl">Total Contracted</div>
+          <div class="earn-val">${fmt(totalBudget)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-hd"><span class="sec-title">All Contracts (${ps.length})</span></div>
+    ${ps.map(p=>{
+      const pct=p.budget?Math.round(earned(p)/p.budget*100):0;
+      const pc=PSCFG[p.status]||{};
+      const pFb=projFeedback(p.id);
+      const pAvg=avgRating(pFb);
+      return `<div class="boss-contractor-card" style="opacity:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
+            <span style="font-size:14px;font-weight:700">${e(p.name)}</span>
+            <span class="pill ${pc.pill||''}">${pc.lbl||p.status}</span>
+          </div>
+          <span style="font-size:15px;font-weight:800">${fmt(p.budget)}</span>
+        </div>
+        <div style="display:flex;gap:18px;font-size:12px;color:#6B7280;align-items:center">
+          <span>Earned: <strong style="color:#14A800">${fmt(earned(p))}</strong> (${pct}%)</span>
+          <span>Phases: ${p.milestones.filter(m=>m.status==='complete').length}/${p.milestones.length}</span>
+          ${pFb.length?`<span>${starsHtml(Math.round(pAvg))} ${pAvg.toFixed(1)}</span>`:''}
+          <span>Started ${fd(p.at)}</span>
+        </div>
+        <div class="pbar" style="margin-top:8px"><div class="pfill" style="width:${pct}%;background:${p.color}"></div></div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
