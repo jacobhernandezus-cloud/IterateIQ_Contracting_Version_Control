@@ -37,3 +37,17 @@ Thumbs.db
 
 # Claude local config
 .claude/
+.gstack/
+
+# Netlify CLI state
+.netlify/
+
+# Other H9 projects (separate repos / not tracked here)
+H9_Hangars/
+KCHD_Developer_Deep_Dives/
+KCHD_Developer_Deep_Dives_OFFICIAL/
+KCHD_Developer_Deep_Dives_BACK UP-04-14-2026/
+KCHD_Developer_Deep_Dives.zip
+Riviera Aircraft Management Website/
+Riviera-Website-Handoff.zip
+kchd-market-dashboard.html
