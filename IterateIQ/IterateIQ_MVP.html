@@ -603,11 +603,11 @@ const DEFAULT_USERS=[
   {id:'chris',name:'Chris Donovan',initials:'CD',role:'boss',gradient:'linear-gradient(135deg,#1e3a5f,#7c3aed)',desc:'Project Owner — post & manage projects'},
   {id:'jacob',name:'Jacob H.',initials:'JH',role:'contractor',gradient:'linear-gradient(135deg,#FF8C00,#142338)',desc:'Track projects, phases, earnings & feedback'},
   {id:'chuy',name:'Chuy Hernandez',initials:'CH',role:'contractor',gradient:'linear-gradient(135deg,#0ea5e9,#142338)',desc:'Track projects, phases, earnings & feedback'},
-  {id:'daniel',name:'Daniel Hernandez',initials:'DH',role:'contractor',gradient:'linear-gradient(135deg,#0d9488,#142338)',desc:'Track projects, phases, earnings & feedback'}
+  {id:'daniel',name:'Daniel Hernandez',initials:'DH',role:'boss',gradient:'linear-gradient(135deg,#0d9488,#1e3a5f)',desc:'Project Owner — post & manage projects'}
 ];
 // Bumped key to v2 to clear stale demo users from prior sessions
-function loadUsers(){try{const s=localStorage.getItem('iterateiq_users_v2');if(s){const u=JSON.parse(s);return u.length?u:DEFAULT_USERS;}}catch(e){}return DEFAULT_USERS.map(u=>({...u}));}
-function saveUsers(){localStorage.setItem('iterateiq_users_v2',JSON.stringify(USERS));}
+function loadUsers(){try{const s=localStorage.getItem('iterateiq_users_v3');if(s){const u=JSON.parse(s);return u.length?u:DEFAULT_USERS;}}catch(e){}return DEFAULT_USERS.map(u=>({...u}));}
+function saveUsers(){localStorage.setItem('iterateiq_users_v3',JSON.stringify(USERS));}
 let USERS=loadUsers();
 // Ensure all default users exist (handles partial localStorage from prior sessions)
 DEFAULT_USERS.forEach(du=>{if(!USERS.find(u=>u.id===du.id))USERS.push({...du});});
