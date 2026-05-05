@@ -60,6 +60,13 @@ input,select,textarea{font-family:inherit}
 .assign-stack{display:inline-flex;align-items:center}
 .assign-stack .avatar-mini{width:26px;height:26px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;margin-left:-6px}
 .assign-stack .avatar-mini:first-child{margin-left:0}
+.ms-assign{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding-left:12px}
+.ms-assign-lbl{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.07em}
+.ms-assign .avatar-mini{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:9px;margin:0}
+.ms-assign-name{font-size:11px;font-weight:600;color:#374151}
+.ms-assign-sel{font-family:inherit;font-size:11px;font-weight:600;color:#142338;border:1.5px solid #E8ECF0;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;transition:border-color .15s}
+.ms-assign-sel:hover{border-color:#FF8C00}
+.ms-meta-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .content{padding:22px 28px;flex:1}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
@@ -417,9 +424,9 @@ const G={
       status:'complete',color:'#0ea5e9',cat:'Web Design',tags:['web','marketing','aviation'],at:'2026-02-01',
       budget:7800,rate:'Phase-Based',
       milestones:[
-        {id:1,name:'Discovery + Sitemap',price:1800,status:'complete',paid:true,due:'2026-02-10',dels:['Stakeholder interviews','Sitemap','Content brief']},
-        {id:2,name:'Homepage + Services Design',price:3500,status:'complete',paid:true,due:'2026-02-25',dels:['Homepage HiFi','3 services pages','Mobile breakpoints']},
-        {id:3,name:'Build + Launch',price:2500,status:'complete',paid:true,due:'2026-03-15',dels:['Production build','SEO setup','Launch checklist']},
+        {id:1,name:'Discovery + Sitemap',assignedTo:'jacob',price:1800,status:'complete',paid:true,due:'2026-02-10',dels:['Stakeholder interviews','Sitemap','Content brief']},
+        {id:2,name:'Homepage + Services Design',assignedTo:'jacob',price:3500,status:'complete',paid:true,due:'2026-02-25',dels:['Homepage HiFi','3 services pages','Mobile breakpoints']},
+        {id:3,name:'Build + Launch',assignedTo:'chuy',price:2500,status:'complete',paid:true,due:'2026-03-15',dels:['Production build','SEO setup','Launch checklist']},
       ]},
     {id:3,ownerId:'jacob',contractors:['jacob'],postedById:'jon',fromAvailId:9003,name:'Whitney Capital — Investor Deck',client:'Whitney Capital',
       desc:'Polished investor pitch deck for Q2 fundraise: narrative, data viz, and brand-aligned visual design.',
@@ -575,9 +582,9 @@ function areaChart(data,kx,ky,color,h=110){
 
 // ── USER REGISTRY (localStorage) ─────────────────────────────────────────────
 const DEFAULT_USERS=[
-  {id:'george',name:'George Sumner',initials:'GS',role:'boss',gradient:'linear-gradient(135deg,#0f1f30,#1e3a5f)',desc:'Managing Partner — post & review contracts'},
-  {id:'jon',name:'Jon Whitney',initials:'JW',role:'boss',gradient:'linear-gradient(135deg,#142338,#FF8C00)',desc:'Partner — post & review contracts'},
-  {id:'chris',name:'Chris Donovan',initials:'CD',role:'boss',gradient:'linear-gradient(135deg,#1e3a5f,#7c3aed)',desc:'Partner — post & review contracts'},
+  {id:'george',name:'George Sumner',initials:'GS',role:'boss',gradient:'linear-gradient(135deg,#0f1f30,#1e3a5f)',desc:'Project Owner — post & manage projects'},
+  {id:'jon',name:'Jon Whitney',initials:'JW',role:'boss',gradient:'linear-gradient(135deg,#142338,#FF8C00)',desc:'Project Owner — post & manage projects'},
+  {id:'chris',name:'Chris Donovan',initials:'CD',role:'boss',gradient:'linear-gradient(135deg,#1e3a5f,#7c3aed)',desc:'Project Owner — post & manage projects'},
   {id:'jacob',name:'Jacob H.',initials:'JH',role:'contractor',gradient:'linear-gradient(135deg,#FF8C00,#142338)',desc:'Track projects, phases, earnings & feedback'},
   {id:'chuy',name:'Chuy Hernandez',initials:'CH',role:'contractor',gradient:'linear-gradient(135deg,#0ea5e9,#142338)',desc:'Track projects, phases, earnings & feedback'}
 ];
@@ -609,7 +616,7 @@ function loginView(){
       <div style="margin-bottom:10px"><label class="flbl">I am a...</label>
         <select id="signup-role" class="fi">
           <option value="contractor">Contractor — I do the work</option>
-          <option value="boss">Manager — I post and manage contracts</option>
+          <option value="boss">Project Owner — I post and manage projects</option>
         </select>
       </div>
       <div style="margin-bottom:10px"><label class="flbl">Full Name</label><input id="signup-name" class="fi" placeholder="e.g. Jane Smith" maxlength="100"/></div>
@@ -651,7 +658,7 @@ function signupUser(){
   const uid='user_'+Date.now();
   const isBoss=role==='boss';
   const gradient=isBoss?'linear-gradient(135deg,#0f1f30,#1e3a5f)':USER_GRADIENTS[USERS.filter(u=>u.role==='contractor').length%USER_GRADIENTS.length];
-  const desc=isBoss?'Post contracts, review contractor progress':'Track projects, milestones, earnings & feedback';
+  const desc=isBoss?'Project Owner — post & manage projects':'Track projects, milestones, earnings & feedback';
   const newUser={id:uid,name:isBoss?name:name,initials:initials,role:role,gradient:gradient,desc:desc};
   USERS.push(newUser);saveUsers();
   G.role=role;G.activeUser=newUser;G.loginTarget=null;G.showSignup=false;
@@ -682,7 +689,7 @@ function updateContractNav(){
 }
 function sidebarHtml(){
   if(G.role==='boss') return `<aside class="sidebar">
-    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">Manager Console</div><div class="proto-badge">Prototype</div></div>
+    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">Project Owner Console</div><div class="proto-badge">Prototype</div></div>
     <div class="sb-section">
       <div class="sb-lbl">Management</div>
       <div class="nav-item ${G.view==='boss-dashboard'?'active':''}" data-v="boss-dashboard" onclick="nav('boss-dashboard')">
@@ -691,7 +698,7 @@ function sidebarHtml(){
       </div>
       <div class="nav-item ${G.view==='boss-post'?'active':''}" data-v="boss-post" onclick="nav('boss-post')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Post Contract
+        Post Project
       </div>
       <div class="nav-item ${G.view==='boss-proposals'?'active':''}" data-v="boss-proposals" onclick="nav('boss-proposals')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -713,7 +720,7 @@ function sidebarHtml(){
     <div class="sb-footer">
       <div class="user-row">
         <div class="avatar" style="background:${G.activeUser?G.activeUser.gradient:'linear-gradient(135deg,#0f1f30,#1e3a5f)'}">${G.activeUser?e(G.activeUser.initials):'H9'}</div>
-        <div><div class="user-name">${G.activeUser?e(G.activeUser.name):'H9 Partners'}</div><div class="user-role">Manager</div></div>
+        <div><div class="user-name">${G.activeUser?e(G.activeUser.name):'Project Owner'}</div><div class="user-role">Project Owner</div></div>
         <div class="online-dot"></div>
       </div>
       <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;justify-content:center;font-size:11px" onclick="logout()">Logout</button>
@@ -735,11 +742,11 @@ function sidebarHtml(){
       </div>
       <div class="nav-item ${G.view==='available'?'active':''}" data-v="available" onclick="nav('available')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        Open Contracts ${openAvail?`<span class="nav-badge">${openAvail}</span>`:''}${(()=>{const ba=G.proposals.filter(p=>p.status==='boss-accepted'&&p.contractorId===(G.activeUser?G.activeUser.id:'')).length;return ba?'<span class="nav-badge" style="background:rgba(22,163,74,.2);color:#4ade80;margin-left:2px">'+ba+'</span>':'';})()}
+        Open Projects ${openAvail?`<span class="nav-badge">${openAvail}</span>`:''}${(()=>{const ba=G.proposals.filter(p=>p.status==='boss-accepted'&&p.contractorId===(G.activeUser?G.activeUser.id:'')).length;return ba?'<span class="nav-badge" style="background:rgba(22,163,74,.2);color:#4ade80;margin-left:2px">'+ba+'</span>':'';})()}
       </div>
       <div class="nav-item ${G.view==='accepted'?'active':''}" data-v="accepted" onclick="nav('accepted')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Accepted Contracts ${(()=>{const c=myProjects().filter(p=>p.fromAvailId).length;return c?'<span class="nav-badge">'+c+'</span>':'';})()}
+        Active Projects ${(()=>{const c=myProjects().filter(p=>p.fromAvailId).length;return c?'<span class="nav-badge">'+c+'</span>':'';})()}
       </div>
       <div class="nav-item ${G.view==='feedback'?'active':''}" data-v="feedback" onclick="nav('feedback')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -752,11 +759,11 @@ function sidebarHtml(){
     </div>
     <div class="sb-divider"></div>
     <div class="sb-section">
-      <div class="sb-lbl">Contracts</div>
+      <div class="sb-lbl">My Projects</div>
       <div id="contract-nav"></div>
       <div class="nav-item ${G.view==='new-contract'?'active':''}" data-v="new-contract" onclick="nav('new-contract')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        New Contract
+        New Project
       </div>
     </div>
     <div class="sb-footer">
@@ -790,7 +797,7 @@ function onboardingView(){
     content=`<div style="text-align:center;padding:40px 0">
       <div style="font-size:48px;margin-bottom:16px">${isManager?'🏢':'👋'}</div>
       <h2 style="font-size:24px;font-weight:800;color:#0f1f30;margin-bottom:8px">Welcome to IterateIQ</h2>
-      <p style="color:#4B5563;max-width:400px;margin:0 auto 24px;line-height:1.6">${isManager?'The contract management platform for H9 Partners. Post contracts, set budgets, manage milestones, and track contractor performance.':'The contract management platform for H9 Partners. Track projects, earn money, and build your professional reputation.'}</p>
+      <p style="color:#4B5563;max-width:400px;margin:0 auto 24px;line-height:1.6">${isManager?'The project management platform for project owners. Post projects, set budgets, assign milestones, and track contractor performance.':'The project management platform for contractors. Track projects, earn money, and build your professional reputation.'}</p>
       <button class="btn btn-primary" onclick="G.onboardingStep=1;render()" style="padding:12px 32px;font-size:15px">Get Started →</button>
     </div>`;
   } else if(s===1){
@@ -812,7 +819,7 @@ function onboardingView(){
     }).join('');
     content=`<div style="max-width:480px;margin:0 auto">
       <h3 style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:8px">${isManager?'Areas of Focus':'Skills & Expertise'}</h3>
-      <p style="font-size:13px;color:#9CA3AF;margin-bottom:16px">${isManager?'Select the areas you manage or oversee. This helps match you with the right contractors.':'Select all that apply. These help managers find the right contracts for you.'}</p>
+      <p style="font-size:13px;color:#9CA3AF;margin-bottom:16px">${isManager?'Select the areas you manage or oversee. This helps match you with the right contractors.':'Select all that apply. These help project owners find the right projects for you.'}</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px">${skillChips}</div>
       <div style="margin-top:16px;padding:12px;background:#F8FAFC;border-radius:8px;font-size:12px;color:#4B5563">
         <strong>${p.skills.length}</strong> skill${p.skills.length!==1?'s':''} selected
@@ -885,7 +892,7 @@ function onboardingView(){
     const mgrCards=`
         <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#FFF8F0;border-radius:8px;border:1px solid #FED7AA">
           <span style="font-size:18px">📝</span>
-          <div><div style="font-size:13px;font-weight:600;color:#c2410c">Post a Contract</div><div style="font-size:11px;color:#4B5563">Create and publish work for contractors</div></div>
+          <div><div style="font-size:13px;font-weight:600;color:#c2410c">Post a Project</div><div style="font-size:11px;color:#4B5563">Create and publish work for contractors</div></div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#EFF6FF;border-radius:8px;border:1px solid #BFDBFE">
           <span style="font-size:18px">👥</span>
@@ -898,7 +905,7 @@ function onboardingView(){
     const ctrCards=`
         <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0">
           <span style="font-size:18px">📋</span>
-          <div><div style="font-size:13px;font-weight:600;color:#15803d">Browse Open Contracts</div><div style="font-size:11px;color:#4B5563">Find work posted by your managers</div></div>
+          <div><div style="font-size:13px;font-weight:600;color:#15803d">Browse Open Projects</div><div style="font-size:11px;color:#4B5563">Find work posted by your project owners</div></div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#EFF6FF;border-radius:8px;border:1px solid #BFDBFE">
           <span style="font-size:18px">💰</span>
@@ -923,7 +930,7 @@ function onboardingView(){
     <div style="background:#fff;border-radius:16px;width:100%;max-width:600px;box-shadow:0 8px 32px rgba(0,0,0,0.12);overflow:hidden">
       <div style="background:#0f1f30;padding:20px 24px">
         <div style="font-size:18px;font-weight:800;color:#fff">Iterate<span style="color:#FF8C00">IQ</span></div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">${isManager?'Manager':'Contractor'} Onboarding</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">${isManager?'Project Owner':'Contractor'} Onboarding</div>
       </div>
       <div style="padding:20px 24px 12px">
         <div style="display:flex;align-items:flex-start;gap:4px;margin-bottom:8px">${stepBar}</div>
@@ -993,7 +1000,7 @@ function contactsView(){
       <div class="contact-avatar" style="background:${u.gradient}">${e(u.initials)}</div>
       <div class="contact-meta">
         <div class="contact-name">${e(u.name)}${isMe?' <span style="font-size:10px;color:#9CA3AF;font-weight:500;margin-left:6px">(you)</span>':''}</div>
-        <div class="contact-role">${u.role==='boss'?'Manager · '+(u.desc||''):'Contractor · '+(u.desc||'')}</div>
+        <div class="contact-role">${u.role==='boss'?'Project Owner · '+(u.desc||''):'Contractor · '+(u.desc||'')}</div>
       </div>
       <div class="contact-actions">
         ${isMe?'':`<button class="btn btn-outline btn-sm" onclick="alert('Messaging coming soon — for now use the Feedback tab on any shared contract.')">Message</button>`}
@@ -1001,11 +1008,11 @@ function contactsView(){
     </div>`;
   };
   return `<div class="topbar">
-    <div><div class="topbar-title">Contacts</div><div class="topbar-sub">${managers.length} manager${managers.length!==1?'s':''} · ${contractors.length} contractor${contractors.length!==1?'s':''}</div></div>
+    <div><div class="topbar-title">Contacts</div><div class="topbar-sub">${managers.length} project owner${managers.length!==1?'s':''} · ${contractors.length} contractor${contractors.length!==1?'s':''}</div></div>
   </div>
   <div style="padding:24px 28px">
     <div style="margin-bottom:24px">
-      <div style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Managers</div>
+      <div style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Project Owners</div>
       <div style="display:flex;flex-direction:column;gap:10px">${managers.map(renderRow).join('')}</div>
     </div>
     <div>
@@ -1087,9 +1094,9 @@ function dashView(){
   const earnByP=ps.map(p=>({n:p.name.split(' ')[0].replace(',',''),c:earned(p)}));
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Dashboard</div><div class="topbar-sub">All contracts · ${ps.length} total</div></div>
+    <div><div class="topbar-title">Dashboard</div><div class="topbar-sub">All projects · ${ps.length} total</div></div>
     <button class="btn btn-primary" onclick="nav('new-contract')">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Contract
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Project
     </button>
   </div>
   <div class="content">
@@ -1115,7 +1122,7 @@ function dashView(){
           <div class="earn-badge eb-yellow">⏳ Awaiting</div>
         </div>
         <div class="earn-stat">
-          <div class="earn-lbl">Open Contracts</div>
+          <div class="earn-lbl">Active Projects</div>
           <div class="earn-val">${activePs.length}</div>
           <div class="earn-sub">${closedCount} closed · ${ps.length} total</div>
           <div class="earn-badge eb-green">↑ ${activePs.length} active</div>
@@ -1123,8 +1130,8 @@ function dashView(){
         <div class="earn-stat">
           <div class="earn-lbl">Total Contracted</div>
           <div class="earn-val">${fmt(totalContracted)}</div>
-          <div class="earn-sub">across all contracts</div>
-          <div class="earn-badge eb-green">${Math.round(totalEarned/totalContracted*100)}% collected</div>
+          <div class="earn-sub">across all projects</div>
+          <div class="earn-badge eb-green">${totalContracted?Math.round(totalEarned/totalContracted*100):0}% collected</div>
         </div>
       </div>
     </div>
@@ -1166,8 +1173,8 @@ function dashView(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
       <div>
         <div class="sec-hd">
-          <span class="sec-title">Contracts (${ps.length})</span>
-          <button class="btn btn-outline btn-sm" onclick="nav('new-contract')">+ New Contract</button>
+          <span class="sec-title">My Projects (${ps.length})</span>
+          <button class="btn btn-outline btn-sm" onclick="nav('new-contract')">+ New Project</button>
         </div>
         <div class="contract-list">${cards}</div>
       </div>
@@ -1221,6 +1228,19 @@ function contractDetailView(){
         <span class="${done?'del-check-done':'del-check-pending'}">${done?'✓':'○'}</span>
         <span>${e(d)}</span>
       </div>`).join('');
+    // Assigned contractor for this milestone (defaults to project owner)
+    const assignedId=m.assignedTo||p.ownerId;
+    const assignedUser=USERS.find(u=>u.id===assignedId);
+    const teamIds=p.contractors&&p.contractors.length?p.contractors:[p.ownerId];
+    const isOwner=G.role==='boss';
+    const assignmentHtml=isOwner&&teamIds.length>1?
+      `<div class="ms-assign">
+        <span class="ms-assign-lbl">Assigned</span>
+        <select class="ms-assign-sel" onchange="assignMilestone(${p.id},${m.id},this.value)">
+          ${teamIds.map(cid=>{const u=USERS.find(uu=>uu.id===cid);return u?`<option value="${u.id}" ${assignedId===u.id?'selected':''}>${e(u.name)}</option>`:''}).join('')}
+        </select>
+      </div>`:
+      assignedUser?`<div class="ms-assign"><span class="ms-assign-lbl">Assigned</span><div class="avatar-mini" style="background:${assignedUser.gradient}" title="${e(assignedUser.name)}">${e(assignedUser.initials)}</div><span class="ms-assign-name">${e(assignedUser.name)}</span></div>`:'';
     return `<div class="ms-block">
       <div class="ms-left">
         <div class="ms-num ${cfg.num}">${done?'✓':i+1}</div>
@@ -1236,6 +1256,7 @@ function contractDetailView(){
         <div class="ms-meta-row">
           <span>Due ${fd(m.due)}</span>
           <span>${m.dels.length} deliverable${m.dels.length!==1?'s':''}</span>
+          ${assignmentHtml}
         </div>
         <div class="ms-deliverables">${dels}</div>
       </div>
@@ -1277,7 +1298,7 @@ function contractDetailView(){
   return `<div class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
       <button class="back-btn" onclick="nav('dashboard')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All Contracts
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All Projects
       </button>
       <div style="width:1px;height:22px;background:#E8ECF0"></div>
       <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
@@ -1351,6 +1372,14 @@ function contractDetailView(){
   </div>`;
 }
 function setPF(s){G.projFilter=s;render();}
+function assignMilestone(pid,msId,contractorId){
+  const p=G.projects.find(x=>x.id===pid);if(!p)return;
+  const m=p.milestones.find(x=>x.id===msId);if(!m)return;
+  m.assignedTo=contractorId;
+  // Add to project contractors array if not already there
+  if(p.contractors&&!p.contractors.includes(contractorId))p.contractors.push(contractorId);
+  render();
+}
 
 // ── EARNINGS VIEW ─────────────────────────────────────────────────────────────
 function earningsView(){
@@ -1381,7 +1410,7 @@ function earningsView(){
   }).join('');
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Earnings</div><div class="topbar-sub">Payment tracking across all contracts</div></div>
+    <div><div class="topbar-title">Earnings</div><div class="topbar-sub">Payment tracking across all projects</div></div>
   </div>
   <div class="content">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
@@ -1439,7 +1468,7 @@ function earningsView(){
 function contractBuilderView(){
   const d=G.draft,totBud=pd(d.budget),msTotal=d.milestones.reduce((s,m)=>s+pd(m.price),0),rem=totBud-msTotal;
 
-  if(G.contractOk)return `<div class="topbar"><div><div class="topbar-title">New Contract</div></div></div>
+  if(G.contractOk)return `<div class="topbar"><div><div class="topbar-title">New Project</div></div></div>
     <div class="content">
       <div class="success-banner">
         <span style="font-size:28px">✅</span>
@@ -1497,7 +1526,7 @@ function contractBuilderView(){
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back
       </button>
       <div style="width:1px;height:22px;background:#E8ECF0"></div>
-      <div><div class="topbar-title">New Contract</div><div class="topbar-sub">Milestone-based contract setup</div></div>
+      <div><div class="topbar-title">New Project</div><div class="topbar-sub">Milestone-based project setup</div></div>
     </div>
   </div>
   <div class="content">
@@ -1771,7 +1800,7 @@ function availableWorkView(){
   }).join('');
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Open Contracts</div><div class="topbar-sub">${all.length} contract${all.length!==1?'s':''} available from your managers</div></div>
+    <div><div class="topbar-title">Open Projects</div><div class="topbar-sub">${all.length} project${all.length!==1?'s':''} available from your project owners</div></div>
   </div>
   <div class="content" style="padding-bottom:0">
     <div class="filter-search-wrap">
@@ -1921,7 +1950,7 @@ function confirmProposal(propId){
     return {id:m.id,name:m.name,desc:m.desc||'',price:pp?pp.price:m.price,status:i===0?'in-progress':'upcoming',paid:false,due:m.due,dels:m.dels?[...m.dels]:[]};
   });
   const poster=avail.postedById?USERS.find(u=>u.id===avail.postedById):null;
-  const clientName=poster?poster.name:'Manager';
+  const clientName=poster?poster.name:'Project Owner';
   G.projects.push({id:nid,ownerId:prop.contractorId,contractors:[prop.contractorId],postedById:avail.postedById||null,name:avail.name,client:clientName,desc:avail.desc,
     status:'active',color:PCOLS[ci],cat:avail.cat,
     tags:[avail.cat.toLowerCase().split('/')[0].trim(),avail.urgency],
@@ -1940,7 +1969,7 @@ function acceptedContractsView(){
   const total=accepted.reduce((s,p)=>s+p.budget,0);
   const totalEarned=accepted.reduce((s,p)=>s+earned(p),0);
   return `<div class="topbar">
-    <div><div class="topbar-title">Accepted Contracts</div><div class="topbar-sub">${accepted.length} contract${accepted.length!==1?'s':''} from Open Contracts board</div></div>
+    <div><div class="topbar-title">Active Projects</div><div class="topbar-sub">${accepted.length} project${accepted.length!==1?'s':''} accepted from the Open Projects board</div></div>
   </div>
   <div class="content">
     ${accepted.length===0?`<div class="avail-empty"><div class="avail-empty-icon">📋</div><div style="font-size:15px;font-weight:600;margin-bottom:6px">No accepted contracts yet</div><div style="font-size:13px">Submit proposals on Open Contracts and they will appear here once accepted by the boss.</div></div>`:''}
@@ -2040,7 +2069,7 @@ function feedbackView(){
   }).join('');
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Feedback</div><div class="topbar-sub">${allFb.length} total feedback entries across all contracts</div></div>
+    <div><div class="topbar-title">Feedback</div><div class="topbar-sub">${allFb.length} total feedback entries across all projects</div></div>
   </div>
   <div class="content">
     <div class="fb-hero">
@@ -2083,7 +2112,7 @@ function feedbackView(){
 
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
       <select class="fi" style="width:auto;padding:6px 12px;font-size:12px;min-width:160px" onchange="setFbContractFilter(this.value)">
-        <option value="all" ${!G.feedbackFilter||G.feedbackFilter==='all'?'selected':''}>All Contracts (${allFb.length})</option>
+        <option value="all" ${!G.feedbackFilter||G.feedbackFilter==='all'?'selected':''}>All Projects (${allFb.length})</option>
         ${projIds.map(pid=>{const p=G.projects.find(x=>x.id===pid);return p?`<option value="${pid}" ${G.feedbackFilter==pid?'selected':''}>${e(p.name.split('—')[0].trim())}</option>`:''}).join('')}
       </select>
       <select class="fi" style="width:auto;padding:6px 12px;font-size:12px;min-width:130px" onchange="setFbStarFilter(this.value)">
@@ -2185,16 +2214,25 @@ function bossView(){
   // Active contractor projects (read-only)
   const activeProjs=G.projects.filter(p=>p.status==='active');
 
+  // KPI computations for the secondary stats row
+  const allProjs=G.projects;
+  const totalPaidOut=allProjs.reduce((s,p)=>s+p.milestones.filter(m=>m.paid).reduce((ss,m)=>ss+m.price,0),0);
+  const totalOutstanding=allProjs.reduce((s,p)=>s+p.milestones.filter(m=>m.status==='complete'&&!m.paid).reduce((ss,m)=>ss+m.price,0),0);
+  const totalPhasesComplete=allProjs.reduce((s,p)=>s+p.milestones.filter(m=>m.status==='complete').length,0);
+  const totalPhases=allProjs.reduce((s,p)=>s+p.milestones.length,0);
+  const activeContractors=new Set();
+  allProjs.forEach(p=>{(p.contractors&&p.contractors.length?p.contractors:[p.ownerId]).forEach(c=>activeContractors.add(c));});
+
   return `<div class="topbar">
-    <div><div class="topbar-title">Manager Dashboard</div><div class="topbar-sub">${G.activeUser?e(G.activeUser.name)+' · ':''}Contract Management</div></div>
+    <div><div class="topbar-title">Project Owner Dashboard</div><div class="topbar-sub">${G.activeUser?e(G.activeUser.name)+' · ':''}Project Management</div></div>
     <button class="btn btn-primary" onclick="nav('boss-post')">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Post Contract
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Post Project
     </button>
   </div>
   <div class="content">
     <div class="boss-hero">
-      <div style="font-size:18px;font-weight:700;margin-bottom:4px">Contract Management</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.4)">Post and manage contracts for your contractor</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">Project Management</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4)">Post, assign, and review work from your contractors</div>
       <div class="boss-stats">
         <div class="boss-stat">
           <div class="earn-lbl">Total Posted</div>
@@ -2215,16 +2253,39 @@ function bossView(){
       </div>
     </div>
 
+    <div class="dash-extra-stats">
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">💵</div>
+        <div class="dash-xstat-val">${fmt(totalPaidOut)}</div>
+        <div class="dash-xstat-lbl">Total Paid Out</div>
+      </div>
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">⏳</div>
+        <div class="dash-xstat-val">${fmt(totalOutstanding)}</div>
+        <div class="dash-xstat-lbl">Outstanding</div>
+      </div>
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">✅</div>
+        <div class="dash-xstat-val">${totalPhasesComplete}/${totalPhases}</div>
+        <div class="dash-xstat-lbl">Phases Complete</div>
+      </div>
+      <div class="dash-xstat">
+        <div class="dash-xstat-icon">👥</div>
+        <div class="dash-xstat-val">${activeContractors.size}</div>
+        <div class="dash-xstat-lbl">Active Contractors</div>
+      </div>
+    </div>
+
     <div class="sec-hd">
-      <span class="sec-title">Posted Contracts</span>
+      <span class="sec-title">Posted Projects</span>
       <div class="filter-row" style="margin-bottom:0">
         ${['all','open','claimed','expired'].map(f=>`<button class="chip ${filt===f?'on':''}" onclick="G.bossFilter='${f}';render()">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)} ${f==='all'?all.length:f==='open'?open.length:f==='claimed'?claimed.length:expired.length}</button>`).join('')}
       </div>
     </div>
-    ${shown.length?cards:`<div class="avail-empty" style="padding:30px"><div style="font-size:14px;color:#9CA3AF">No contracts match this filter</div></div>`}
+    ${shown.length?cards:`<div class="avail-empty" style="padding:30px"><div style="font-size:14px;color:#9CA3AF">No projects match this filter</div></div>`}
 
     <div class="sec-hd" style="margin-top:20px">
-      <span class="sec-title">Contractor Active Projects (${activeProjs.length})</span>
+      <span class="sec-title">Active Contractor Projects (${activeProjs.length})</span>
     </div>
     ${activeProjs.map(p=>`<div class="boss-contractor-card">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
@@ -2292,7 +2353,7 @@ function bossPostView(){
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back
       </button>
       <div style="width:1px;height:22px;background:#E8ECF0"></div>
-      <div><div class="topbar-title">Post New Contract</div><div class="topbar-sub">Create an opportunity for your contractor</div></div>
+      <div><div class="topbar-title">Post New Project</div><div class="topbar-sub">Create an opportunity for your contractor</div></div>
     </div>
   </div>
   <div class="content">
@@ -2379,7 +2440,7 @@ function bossProposalsView(){
   const shown=filt==='pending'?pending:filt==='awaiting'?bossAccepted:filt==='accepted'?accepted:filt==='declined'?declined:G.proposals;
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Proposals</div><div class="topbar-sub">Review contractor bids on your posted contracts</div></div>
+    <div><div class="topbar-title">Proposals</div><div class="topbar-sub">Review contractor bids on your posted projects</div></div>
   </div>
   <div class="content">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
@@ -2439,7 +2500,7 @@ function bossAssignedView(){
   const getContractorName=(oid)=>{const u=USERS.find(x=>x.id===oid);return u?u.name:'Unknown';};
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Assigned Contracts</div><div class="topbar-sub">Contracts awarded to contractors via proposals</div></div>
+    <div><div class="topbar-title">Assigned Projects</div><div class="topbar-sub">Projects awarded to contractors via proposals</div></div>
   </div>
   <div class="content">
     ${assigned.length===0?'<div style="text-align:center;padding:40px;color:#9CA3AF"><div style="font-size:28px;margin-bottom:8px">📋</div><div style="font-size:14px;font-weight:600;margin-bottom:4px">No contracts assigned yet</div><div style="font-size:13px">Accept a contractor proposal to assign a contract.</div></div>':''}
