@@ -67,6 +67,22 @@ input,select,textarea{font-family:inherit}
 .ms-assign-sel{font-family:inherit;font-size:11px;font-weight:600;color:#142338;border:1.5px solid #E8ECF0;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;transition:border-color .15s}
 .ms-assign-sel:hover{border-color:#FF8C00}
 .ms-meta-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.share-panel{background:#FFFBF5;border-bottom:1px solid #FFE4C4;padding:18px 28px;animation:fadeSlideIn .18s ease-out}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.share-panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.share-panel-title{font-size:13px;font-weight:700;color:#142338;display:flex;align-items:center;gap:8px}
+.share-panel-close{background:none;border:none;font-size:18px;color:#9CA3AF;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .15s}
+.share-panel-close:hover{background:#FFF;color:#142338}
+.share-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.share-row-lbl{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.07em;min-width:120px}
+.share-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#fff;border:1.5px solid #E8ECF0;border-radius:20px;font-size:12px;font-weight:600;color:#142338}
+.share-chip .avatar-mini{width:18px;height:18px;border-radius:50%;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.share-chip-x{background:none;border:none;color:#9CA3AF;cursor:pointer;font-size:14px;line-height:1;padding:0;margin-left:2px;transition:color .15s}
+.share-chip-x:hover{color:#dc2626}
+.share-chip-owner{background:linear-gradient(135deg,#F0F9FF,#FFF8F0);border-color:#FED7AA}
+.share-add{display:flex;gap:6px;flex-wrap:wrap}
+.share-add select{font-family:inherit;font-size:12px;font-weight:600;color:#142338;border:1.5px solid #E8ECF0;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;min-width:200px}
+.share-add select:hover{border-color:#FF8C00}
 .content{padding:22px 28px;flex:1}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
@@ -357,7 +373,7 @@ input,select,textarea{font-family:inherit}
 <script>
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const G={
-  view:'dashboard', selPid:null, projFilter:'all', nextId:300, contractOk:false,
+  view:'dashboard', selPid:null, projFilter:'all', nextId:300, contractOk:false, shareOpen:false,
   // Auth & Onboarding
   role:null, bossAuth:false, activeUser:null, loginTarget:null, showSignup:false,
   onboardingComplete:true, onboardingStep:0,
@@ -586,7 +602,8 @@ const DEFAULT_USERS=[
   {id:'jon',name:'Jon Whitney',initials:'JW',role:'boss',gradient:'linear-gradient(135deg,#142338,#FF8C00)',desc:'Project Owner — post & manage projects'},
   {id:'chris',name:'Chris Donovan',initials:'CD',role:'boss',gradient:'linear-gradient(135deg,#1e3a5f,#7c3aed)',desc:'Project Owner — post & manage projects'},
   {id:'jacob',name:'Jacob H.',initials:'JH',role:'contractor',gradient:'linear-gradient(135deg,#FF8C00,#142338)',desc:'Track projects, phases, earnings & feedback'},
-  {id:'chuy',name:'Chuy Hernandez',initials:'CH',role:'contractor',gradient:'linear-gradient(135deg,#0ea5e9,#142338)',desc:'Track projects, phases, earnings & feedback'}
+  {id:'chuy',name:'Chuy Hernandez',initials:'CH',role:'contractor',gradient:'linear-gradient(135deg,#0ea5e9,#142338)',desc:'Track projects, phases, earnings & feedback'},
+  {id:'daniel',name:'Daniel Hernandez',initials:'DH',role:'contractor',gradient:'linear-gradient(135deg,#0d9488,#142338)',desc:'Track projects, phases, earnings & feedback'}
 ];
 // Bumped key to v2 to clear stale demo users from prior sessions
 function loadUsers(){try{const s=localStorage.getItem('iterateiq_users_v2');if(s){const u=JSON.parse(s);return u.length?u:DEFAULT_USERS;}}catch(e){}return DEFAULT_USERS.map(u=>({...u}));}
@@ -674,6 +691,7 @@ function logout(){G.role=null;G.activeUser=null;G.loginTarget=null;G.showSignup=
 function nav(view,pid){
   G.view=view;
   if(pid!==undefined)G.selPid=pid;
+  G.shareOpen=false; // close share panel on any navigation
   render();
 }
 function updateContractNav(){
@@ -1303,13 +1321,17 @@ function contractDetailView(){
       </button>
       <div style="width:1px;height:22px;background:#E8ECF0"></div>
       <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
-      <div><div class="topbar-title">${e(p.name)}</div><div class="topbar-sub">${e(p.client)} · ${e(p.cat)}${p.postedById?(()=>{const m=USERS.find(u=>u.id===p.postedById);return m?` · Posted by ${e(m.name)}`:'';})():''}</div></div>
+      <div><div class="topbar-title">${e(p.name)}</div><div class="topbar-sub">${e(p.client)} · ${e(p.cat)}${p.postedById?(()=>{const m=USERS.find(u=>u.id===p.postedById);return m?` · Posted by ${e(m.name)}`:'';})():''}${p.coOwners&&p.coOwners.length?(()=>{const names=p.coOwners.map(cid=>{const u=USERS.find(uu=>uu.id===cid);return u?e(u.name):'';}).filter(Boolean).join(', ');return names?` · Co-owners: ${names}`:'';})():''}</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:14px">
       ${(()=>{const cs=p.contractors&&p.contractors.length?p.contractors:[p.ownerId];const stack=cs.map(cid=>{const u=USERS.find(uu=>uu.id===cid);if(!u)return'';return `<div class="avatar-mini" style="background:${u.gradient}" title="${e(u.name)}">${e(u.initials)}</div>`;}).join('');return cs.length>1?`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:#6B7280;font-weight:600">Team</span><div class="assign-stack">${stack}</div></div>`:'';})()}
-      <button class="btn btn-primary btn-sm" onclick="openIterModal()">+ Log Update</button>
+      <button class="btn btn-outline btn-sm" onclick="toggleShare()" title="Share or assign this project">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share
+      </button>
+      ${G.role==='contractor'?`<button class="btn btn-primary btn-sm" onclick="openIterModal()">+ Log Update</button>`:''}
     </div>
   </div>
+  ${G.shareOpen?sharePanelHtml(p):''}
   <div class="content">
     <div class="detail-stats">
       <div class="dstat" style="border-top:3px solid ${p.color}">
@@ -1379,6 +1401,107 @@ function assignMilestone(pid,msId,contractorId){
   m.assignedTo=contractorId;
   // Add to project contractors array if not already there
   if(p.contractors&&!p.contractors.includes(contractorId))p.contractors.push(contractorId);
+  render();
+}
+function toggleShare(){G.shareOpen=!G.shareOpen;render();}
+function sharePanelHtml(p){
+  const teamIds=p.contractors&&p.contractors.length?p.contractors:[p.ownerId];
+  const coOwnerIds=p.coOwners||[];
+  const primaryOwnerId=p.postedById;
+  const allContractors=USERS.filter(u=>u.role==='contractor');
+  const allOwners=USERS.filter(u=>u.role==='boss');
+  const availableContractors=allContractors.filter(u=>!teamIds.includes(u.id));
+  const availableOwners=allOwners.filter(u=>u.id!==primaryOwnerId&&!coOwnerIds.includes(u.id));
+
+  const teamChips=teamIds.map(cid=>{
+    const u=USERS.find(uu=>uu.id===cid);if(!u)return'';
+    const canRemove=cid!==p.ownerId; // never remove primary contractor
+    return `<span class="share-chip">
+      <div class="avatar-mini" style="background:${u.gradient}">${e(u.initials)}</div>
+      ${e(u.name)}
+      ${canRemove?`<button class="share-chip-x" onclick="removeContractorFromProject(${p.id},'${u.id}')" title="Remove from project">✕</button>`:''}
+    </span>`;
+  }).join('');
+
+  const ownerChips=`<span class="share-chip share-chip-owner">
+      <div class="avatar-mini" style="background:${(()=>{const u=USERS.find(uu=>uu.id===primaryOwnerId);return u?u.gradient:'#142338';})()}">${(()=>{const u=USERS.find(uu=>uu.id===primaryOwnerId);return u?e(u.initials):'PO';})()}</div>
+      ${(()=>{const u=USERS.find(uu=>uu.id===primaryOwnerId);return u?e(u.name)+' (Primary)':'Project Owner';})()}
+    </span>`+
+    coOwnerIds.map(oid=>{
+      const u=USERS.find(uu=>uu.id===oid);if(!u)return'';
+      return `<span class="share-chip share-chip-owner">
+        <div class="avatar-mini" style="background:${u.gradient}">${e(u.initials)}</div>
+        ${e(u.name)}
+        <button class="share-chip-x" onclick="removeCoOwnerFromProject(${p.id},'${u.id}')" title="Remove co-owner">✕</button>
+      </span>`;
+    }).join('');
+
+  return `<div class="share-panel">
+    <div class="share-panel-hd">
+      <div class="share-panel-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF8C00" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share or assign this project
+      </div>
+      <button class="share-panel-close" onclick="toggleShare()" title="Close">✕</button>
+    </div>
+    <div class="share-row">
+      <div class="share-row-lbl">Project Owners</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1">${ownerChips}</div>
+    </div>
+    ${availableOwners.length?`<div class="share-row" style="margin-bottom:14px">
+      <div class="share-row-lbl"></div>
+      <div class="share-add">
+        <select id="add-coowner-sel">
+          <option value="">+ Add co-owner…</option>
+          ${availableOwners.map(u=>`<option value="${u.id}">${e(u.name)}</option>`).join('')}
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="addCoOwnerFromSelect(${p.id})">Add</button>
+      </div>
+    </div>`:''}
+    <div class="share-row">
+      <div class="share-row-lbl">Contractors</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1">${teamChips||'<span style="font-size:12px;color:#9CA3AF;font-style:italic">No contractors assigned yet</span>'}</div>
+    </div>
+    ${availableContractors.length?`<div class="share-row">
+      <div class="share-row-lbl"></div>
+      <div class="share-add">
+        <select id="add-contractor-sel">
+          <option value="">+ Add contractor…</option>
+          ${availableContractors.map(u=>`<option value="${u.id}">${e(u.name)}</option>`).join('')}
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="addContractorFromSelect(${p.id})">Add</button>
+      </div>
+    </div>`:''}
+  </div>`;
+}
+function addContractorFromSelect(pid){
+  const sel=document.getElementById('add-contractor-sel');if(!sel||!sel.value)return;
+  const cid=sel.value;
+  const p=G.projects.find(x=>x.id===pid);if(!p)return;
+  if(!p.contractors)p.contractors=[p.ownerId];
+  if(!p.contractors.includes(cid))p.contractors.push(cid);
+  render();
+}
+function addCoOwnerFromSelect(pid){
+  const sel=document.getElementById('add-coowner-sel');if(!sel||!sel.value)return;
+  const oid=sel.value;
+  const p=G.projects.find(x=>x.id===pid);if(!p)return;
+  if(!p.coOwners)p.coOwners=[];
+  if(!p.coOwners.includes(oid))p.coOwners.push(oid);
+  render();
+}
+function removeContractorFromProject(pid,cid){
+  const p=G.projects.find(x=>x.id===pid);if(!p||!p.contractors)return;
+  // Don't allow removing if they're the primary owner
+  if(cid===p.ownerId)return;
+  p.contractors=p.contractors.filter(c=>c!==cid);
+  // Reassign any milestones they had to the primary owner
+  p.milestones.forEach(m=>{if(m.assignedTo===cid)m.assignedTo=p.ownerId;});
+  render();
+}
+function removeCoOwnerFromProject(pid,oid){
+  const p=G.projects.find(x=>x.id===pid);if(!p||!p.coOwners)return;
+  p.coOwners=p.coOwners.filter(o=>o!==oid);
   render();
 }
 
