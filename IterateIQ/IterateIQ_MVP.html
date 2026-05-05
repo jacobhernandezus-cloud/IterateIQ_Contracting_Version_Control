@@ -83,6 +83,22 @@ input,select,textarea{font-family:inherit}
 .share-add{display:flex;gap:6px;flex-wrap:wrap}
 .share-add select{font-family:inherit;font-size:12px;font-weight:600;color:#142338;border:1.5px solid #E8ECF0;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;min-width:200px}
 .share-add select:hover{border-color:#FF8C00}
+.attach-zone{margin-top:8px;border:1.5px dashed #C5D0DE;border-radius:10px;padding:12px;background:#F8FAFC;transition:all .15s}
+.attach-zone:hover{border-color:#FF8C00;background:#FFF8F0}
+.attach-zone-lbl{display:flex;align-items:center;gap:8px;font-size:11px;color:#6B7280;cursor:pointer;font-weight:600}
+.attach-zone-lbl svg{flex-shrink:0}
+.attach-input{display:none}
+.attach-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.attach-thumb{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;background:#142338;border:1.5px solid #E8ECF0;cursor:pointer;flex-shrink:0}
+.attach-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.attach-thumb video{width:100%;height:100%;object-fit:cover;display:block;background:#142338}
+.attach-thumb-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:20px;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.attach-thumb-x{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.attach-thumb-x:hover{background:#dc2626}
+.attach-thumb-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff;font-size:9px;font-weight:600;padding:8px 4px 3px;line-height:1.2;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.attach-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:#fff;border:1.5px solid #E8ECF0;border-radius:8px;font-size:11px;font-weight:600;color:#142338;cursor:pointer;text-decoration:none;transition:all .15s}
+.attach-pill:hover{border-color:#FF8C00;background:#FFF8F0}
+.attach-pill svg{flex-shrink:0}
 .content{padding:22px 28px;flex:1}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
@@ -373,7 +389,7 @@ input,select,textarea{font-family:inherit}
 <script>
 // ── STATE ─────────────────────────────────────────────────────────────────────
 const G={
-  view:'dashboard', selPid:null, projFilter:'all', nextId:300, contractOk:false, shareOpen:false,
+  view:'dashboard', selPid:null, projFilter:'all', nextId:300, contractOk:false, shareOpen:false, modalAttachments:[],
   // Auth & Onboarding
   role:null, bossAuth:false, activeUser:null, loginTarget:null, showSignup:false,
   onboardingComplete:true, onboardingStep:0,
@@ -1306,6 +1322,7 @@ function contractDetailView(){
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span><strong>Client feedback:</strong> ${e(it.feedback)}</span>
         </div>`:''}
+        ${it.attachments&&it.attachments.length?`<div class="attach-grid" style="margin-top:6px">${renderAttachThumbs(it.attachments,false)}</div>`:''}
       </div>
     </div>`;
   }).join(''):`<div style="text-align:center;padding:36px;color:#9CA3AF"><div style="font-size:28px;margin-bottom:8px">📋</div>No updates match this filter</div>`;
@@ -1773,6 +1790,7 @@ function setStarRating(id,val){iterStarRating=val;document.querySelectorAll('#st
 function openIterModal(){
   const p=G.projects.find(p=>p.id===G.selPid);if(!p)return;
   iterStarRating=4;
+  G.modalAttachments=[]; // reset on open
   const its=piters(p.id);
   const last=its.length?its[its.length-1].ver:'v0.0';
   const m=last.match(/(\d+)\.(\d+)/);
@@ -1808,7 +1826,16 @@ function openIterModal(){
         <div class="fg"><label class="flbl">Notes</label>
           <textarea class="fi" id="in" rows="3" placeholder="What was done, decisions made, blockers…" style="resize:vertical;min-height:72px"></textarea></div>
         <div class="fg"><label class="flbl">Client Feedback</label>
-          <textarea class="fi" id="ifb" rows="2" placeholder="Paste client feedback or comments here…" style="resize:vertical;min-height:52px"></textarea></div>
+          <textarea class="fi" id="ifb" rows="2" placeholder="Paste client feedback or comments here…" style="resize:vertical;min-height:52px"></textarea>
+          <div class="attach-zone">
+            <label for="iter-attach-input" class="attach-zone-lbl">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              <span>Attach screenshots, images, videos, or files (PNG, JPG, GIF, MP4, PDF) — click or drag to add</span>
+            </label>
+            <input type="file" id="iter-attach-input" class="attach-input" multiple accept="image/*,video/*,.pdf,.gif" onchange="handleAttachUpload(event)"/>
+            <div class="attach-grid" id="iter-attach-grid">${renderAttachThumbs(G.modalAttachments,true)}</div>
+          </div>
+        </div>
         <div class="fg"><label class="flbl">Feedback Rating</label>
           <div id="star-input-iter" class="star-input">${[1,2,3,4,5].map(i=>`<span class="star ${i<=4?'filled':'empty'}" onclick="setStarRating(0,${i})">★</span>`).join('')}</div>
           <div style="font-size:10px;color:#9CA3AF;margin-top:3px">Rate client feedback (only saved if feedback text is provided)</div>
@@ -1836,16 +1863,82 @@ function saveIter(){
   const status=document.getElementById('is').value;
   const validStatuses=['in-progress','review','testing','complete','blocked'];
   if(!validStatuses.includes(status)){alert('Invalid status.');return;}
-  G.iters.push({id:iterId,pid:G.selPid,ver,title,status,hrs,date,notes,feedback:fbText,changes:[]});
-  // Create feedback entry if feedback text provided
-  if(fbText){
+  const attachments=G.modalAttachments.slice(); // copy current attachments
+  G.iters.push({id:iterId,pid:G.selPid,ver,title,status,hrs,date,notes,feedback:fbText,changes:[],attachments});
+  // Create feedback entry if feedback text or attachments provided
+  if(fbText||attachments.length){
     const p=G.projects.find(p=>p.id===G.selPid);
     G.feedback.push({id:G.nextFeedbackId++,pid:G.selPid,iterId:iterId,msId:null,
-      from:p?p.client:'Client',date:date,rating:iterStarRating,text:fbText,response:null,respondedAt:null});
+      from:p?p.client:'Client',date:date,rating:iterStarRating,text:fbText,response:null,respondedAt:null,attachments});
   }
   closeModal();render();
 }
-function closeModal(){document.getElementById('mc').innerHTML='';}
+function closeModal(){document.getElementById('mc').innerHTML='';G.modalAttachments=[];}
+
+// ── ATTACHMENTS ───────────────────────────────────────────────────────────────
+const MAX_ATTACH_FILES=10;
+const MAX_ATTACH_BYTES=8*1024*1024; // 8MB per file
+function handleAttachUpload(evt){
+  const files=Array.from(evt.target.files||[]);
+  if(!files.length)return;
+  files.forEach(f=>{
+    if(G.modalAttachments.length>=MAX_ATTACH_FILES){alert('Max '+MAX_ATTACH_FILES+' files per update.');return;}
+    if(f.size>MAX_ATTACH_BYTES){alert(f.name+' is too large (max 8MB).');return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      G.modalAttachments.push({id:Date.now()+Math.random(),name:f.name,type:f.type,size:f.size,dataUrl:e.target.result});
+      const grid=document.getElementById('iter-attach-grid');
+      if(grid)grid.innerHTML=renderAttachThumbs(G.modalAttachments,true);
+    };
+    reader.readAsDataURL(f);
+  });
+  evt.target.value=''; // allow re-selecting the same file
+}
+function removeModalAttachment(id){
+  G.modalAttachments=G.modalAttachments.filter(a=>String(a.id)!==String(id));
+  const grid=document.getElementById('iter-attach-grid');
+  if(grid)grid.innerHTML=renderAttachThumbs(G.modalAttachments,true);
+}
+function renderAttachThumbs(atts,editable){
+  if(!atts||!atts.length)return '';
+  return atts.map(a=>{
+    const isImg=a.type&&a.type.startsWith('image/');
+    const isVid=a.type&&a.type.startsWith('video/');
+    const fileLabel=a.name.length>14?a.name.slice(0,11)+'…':a.name;
+    if(isImg){
+      return `<div class="attach-thumb" onclick="openAttachment('${e(a.dataUrl)}')" title="${e(a.name)}">
+        <img src="${e(a.dataUrl)}" alt="${e(a.name)}"/>
+        ${editable?`<button class="attach-thumb-x" onclick="event.stopPropagation();removeModalAttachment('${a.id}')" title="Remove">✕</button>`:''}
+      </div>`;
+    }
+    if(isVid){
+      return `<div class="attach-thumb" onclick="openAttachment('${e(a.dataUrl)}')" title="${e(a.name)}">
+        <video src="${e(a.dataUrl)}" muted preload="metadata"></video>
+        <span class="attach-thumb-icon">▶</span>
+        <span class="attach-thumb-name">${e(fileLabel)}</span>
+        ${editable?`<button class="attach-thumb-x" onclick="event.stopPropagation();removeModalAttachment('${a.id}')" title="Remove">✕</button>`:''}
+      </div>`;
+    }
+    // generic file pill
+    return `<a class="attach-pill" href="${e(a.dataUrl)}" target="_blank" download="${e(a.name)}" onclick="event.stopPropagation()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      ${e(fileLabel)}
+      ${editable?`<button class="share-chip-x" onclick="event.preventDefault();event.stopPropagation();removeModalAttachment('${a.id}')">✕</button>`:''}
+    </a>`;
+  }).join('');
+}
+function openAttachment(url){
+  // Detect type from data URL prefix
+  const m=url.match(/^data:([^;]+);/);
+  const type=m?m[1]:'';
+  const w=window.open();
+  if(!w)return;
+  let body='';
+  if(type.startsWith('image/'))body='<img src="'+url+'" style="max-width:100%;max-height:100vh;display:block;margin:0 auto"/>';
+  else if(type.startsWith('video/'))body='<video src="'+url+'" controls autoplay style="max-width:100%;max-height:100vh;display:block;margin:0 auto"></video>';
+  else body='<iframe src="'+url+'" style="border:0;width:100%;height:100vh"></iframe>';
+  w.document.write('<title>Attachment</title><body style="margin:0;background:#0f1f30;display:flex;align-items:center;justify-content:center;min-height:100vh">'+body+'</body>');
+}
 
 // ── OPEN CONTRACTS VIEW ──────────────────────────────────────────────────────
 function availableWorkView(){
@@ -2183,6 +2276,7 @@ function feedbackView(){
           <div class="fb-card-from">${e(f.from)}</div>
           <div class="fb-card-context">${p?e(p.name):''} · ${fd(f.date)}</div>
           <div class="fb-card-text">${e(f.text)}</div>
+          ${f.attachments&&f.attachments.length?`<div class="attach-grid" style="margin-top:8px">${renderAttachThumbs(f.attachments,false)}</div>`:''}
         </div>
       </div>
       ${f.response?`<div class="fb-response">
