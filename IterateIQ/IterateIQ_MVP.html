@@ -976,6 +976,7 @@ function render(){
     else if(G.view==='boss-assigned')main.innerHTML=bossAssignedView();
     else if(G.view==='boss-overview')main.innerHTML=bossOverviewView();
     else if(G.view==='contacts')main.innerHTML=contactsView();
+    else if(G.view==='contract')main.innerHTML=contractDetailView();
     else main.innerHTML=bossView();
   } else {
     if(G.view==='dashboard')main.innerHTML=dashView();
@@ -1297,7 +1298,7 @@ function contractDetailView(){
 
   return `<div class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
-      <button class="back-btn" onclick="nav('dashboard')">
+      <button class="back-btn" onclick="nav('${G.role==='boss'?'boss-dashboard':'dashboard'}')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All Projects
       </button>
       <div style="width:1px;height:22px;background:#E8ECF0"></div>
@@ -2211,8 +2212,14 @@ function bossView(){
     </div>`;
   }).join('');
 
-  // Active contractor projects (read-only)
-  const activeProjs=G.projects.filter(p=>p.status==='active');
+  // All contractor projects (active + complete + paused), most recent first
+  const activeProjs=[...G.projects].sort((a,b)=>{
+    // active first, then complete, then paused
+    const order={active:0,complete:1,paused:2};
+    const oa=order[a.status]??3,ob=order[b.status]??3;
+    if(oa!==ob)return oa-ob;
+    return (b.at||'').localeCompare(a.at||'');
+  });
 
   // KPI computations for the secondary stats row
   const allProjs=G.projects;
@@ -2285,21 +2292,27 @@ function bossView(){
     ${shown.length?cards:`<div class="avail-empty" style="padding:30px"><div style="font-size:14px;color:#9CA3AF">No projects match this filter</div></div>`}
 
     <div class="sec-hd" style="margin-top:20px">
-      <span class="sec-title">Active Contractor Projects (${activeProjs.length})</span>
+      <span class="sec-title">All Contractor Projects (${activeProjs.length})</span>
     </div>
-    ${activeProjs.map(p=>`<div class="boss-contractor-card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
-        <span style="font-size:13px;font-weight:700">${e(p.name)}</span>
-        ${pill(null,'p')}
-      </div>
-      <div style="display:flex;gap:16px;font-size:11px;color:#9CA3AF">
-        <span>Budget: ${fmt(p.budget)}</span>
-        <span>Earned: ${fmt(earned(p))}</span>
-        <span>Milestones: ${p.milestones.filter(m=>m.status==='complete').length}/${p.milestones.length}</span>
-        <span>${msProgress(p)}% complete</span>
-      </div>
-    </div>`).join('')}
+    ${activeProjs.map(p=>{
+      const psCfg=PSCFG[p.status]||{};
+      const teamIds=p.contractors&&p.contractors.length?p.contractors:[p.ownerId];
+      const teamHtml=teamIds.map(cid=>{const u=USERS.find(uu=>uu.id===cid);return u?`<div class="avatar-mini" style="background:${u.gradient};width:22px;height:22px;font-size:9px" title="${e(u.name)}">${e(u.initials)}</div>`:'';}).join('');
+      return `<div class="boss-contractor-card" style="cursor:pointer" onclick="nav('contract',${p.id})">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
+          <span style="font-size:13px;font-weight:700">${e(p.name)}</span>
+          <span class="pill ${psCfg.pill||''}">${psCfg.lbl||p.status}</span>
+          ${teamIds.length>1?`<div class="assign-stack" style="margin-left:auto">${teamHtml}</div>`:''}
+        </div>
+        <div style="display:flex;gap:16px;font-size:11px;color:#9CA3AF;flex-wrap:wrap">
+          <span>Budget: ${fmt(p.budget)}</span>
+          <span>Earned: ${fmt(earned(p))}</span>
+          <span>Phases: ${p.milestones.filter(m=>m.status==='complete').length}/${p.milestones.length}</span>
+          <span>${msProgress(p)}% complete</span>
+        </div>
+      </div>`;
+    }).join('')}
   </div>`;
 }
 function bossExpireContract(id){
