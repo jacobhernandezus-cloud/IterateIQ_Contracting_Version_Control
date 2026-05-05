@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:;"/>
-<title>H9 Partners — Contract Management Platform</title>
+<title>IterateIQ — Contract Management Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -49,6 +49,17 @@ input,select,textarea{font-family:inherit}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 28px;background:#fff;border-bottom:1px solid #E8ECF0;position:sticky;top:0;z-index:10;gap:12px}
 .topbar-title{font-size:17px;font-weight:700;color:#1a1a2e}
 .topbar-sub{font-size:11px;color:#9CA3AF;margin-top:2px}
+.proto-badge{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:10px;background:rgba(255,140,0,.18);color:#FF8C00;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.contact-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1.5px solid #E8ECF0;border-radius:12px;background:#fff;transition:all .18s}
+.contact-card:hover{border-color:#C5D0DE;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.contact-avatar{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0}
+.contact-meta{flex:1;min-width:0}
+.contact-name{font-size:14px;font-weight:700;color:#1a1a2e}
+.contact-role{font-size:11px;color:#6B7280;margin-top:2px}
+.contact-actions{display:flex;gap:6px;flex-shrink:0}
+.assign-stack{display:inline-flex;align-items:center}
+.assign-stack .avatar-mini{width:26px;height:26px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;margin-left:-6px}
+.assign-stack .avatar-mini:first-child{margin-left:0}
 .content{padding:22px 28px;flex:1}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
@@ -346,36 +357,35 @@ const G={
   onboardingProfile:{name:'',title:'',bio:'',skills:[],rate:'',availability:'available'},
   // Feedback system
   feedback:[
-    {id:1,pid:1,iterId:4,msId:1,from:'H9 Partners',date:'2026-03-08',rating:5,text:'Great work on M1! The research plan is very thorough.',response:null,respondedAt:null},
-    {id:2,pid:2,iterId:7,msId:1,from:'Apex Digital',date:'2026-02-01',rating:4,text:'Love the new nav! A few tweaks needed on the checkout flow.',response:'Thanks! I will address the checkout flow in the next update.',respondedAt:'2026-02-02'},
-    {id:3,pid:2,iterId:8,msId:2,from:'Apex Digital',date:'2026-02-15',rating:5,text:'Excellent — ready to move to handoff.',response:null,respondedAt:null},
-    {id:4,pid:3,iterId:10,msId:1,from:'H9 Partners',date:'2026-01-05',rating:5,text:'Exactly what we needed — really clean work!',response:'Thank you! Happy to help with any future updates.',respondedAt:'2026-01-06'},
-    {id:5,pid:3,iterId:11,msId:2,from:'H9 Partners',date:'2026-01-20',rating:5,text:'Incredible improvement. Signing off on final payment now.',response:null,respondedAt:null},
-    {id:6,pid:4,iterId:12,msId:1,from:'GrowthLab Co.',date:'2026-02-01',rating:4,text:'Good research. Move to prototyping.',response:null,respondedAt:null},
-    {id:7,pid:4,iterId:13,msId:2,from:'GrowthLab Co.',date:'2026-02-18',rating:3,text:'We are still working on the auth decision. Please stand by.',response:'Understood — will resume once the decision is made.',respondedAt:'2026-02-19'},
-    {id:8,pid:1,iterId:2,msId:null,from:'H9 Partners',date:'2026-03-05',rating:4,text:'Looks clean! Can we make the contract cards more prominent?',response:'Absolutely — working on that in the next update.',respondedAt:'2026-03-06'},
+    {id:1,pid:1,iterId:1,msId:1,from:'George Sumner',date:'2026-04-23',rating:5,text:'Looks great — exactly the version I had in mind. Thanks for moving fast on this.',response:'Thanks George — pulling the next phase up to today.',respondedAt:'2026-04-23'},
+    {id:2,pid:1,iterId:3,msId:3,from:'George Sumner',date:'2026-04-27',rating:5,text:'Perfect. Nav rename looks clean. Ready for the Fractional restructure.',response:null,respondedAt:null},
+    {id:3,pid:2,iterId:6,msId:1,from:'George Sumner',date:'2026-02-09',rating:5,text:"Sitemap is exactly what we wanted. Let's keep moving.",response:'Thanks — homepage HiFi coming in two weeks.',respondedAt:'2026-02-10'},
+    {id:4,pid:2,iterId:7,msId:2,from:'George Sumner',date:'2026-02-23',rating:5,text:'Love the homepage hero. Ready to build.',response:null,respondedAt:null},
+    {id:5,pid:2,iterId:8,msId:3,from:'George Sumner',date:'2026-03-13',rating:5,text:'Site looks fantastic. Final invoice approved.',response:'Appreciate it — invoice sent, looking forward to the next round.',respondedAt:'2026-03-14'},
+    {id:6,pid:3,iterId:9,msId:1,from:'Jon Whitney',date:'2026-04-18',rating:5,text:'Great structure. Run with it. Investors will respond well to this flow.',response:null,respondedAt:null},
+    {id:7,pid:4,iterId:11,msId:1,from:'Chris Donovan',date:'2026-04-25',rating:5,text:'Wordmark is perfect. Green-light the guidelines doc.',response:'On it — first draft by end of next week.',respondedAt:'2026-04-25'},
   ],
   nextFeedbackId:9, feedbackFilter:'all', feedbackStarFilter:'all', feedbackSort:'newest',
   // Available contracts (boss posts these)
   available:[
-    {id:500,name:'Brand Identity System',desc:'Complete brand identity including logo, color palette, typography, and brand guidelines document for H9 Partners sub-brand.',
-      budget:4500,cat:'Branding',urgency:'high',status:'open',postedAt:'2026-03-10',claimedBy:null,claimedAt:null,
+    {id:500,postedById:'george',name:'Riviera Aviation — Owner Portal Mockups',desc:'Design exploratory mockups for a future Riviera Aviation owner portal where fractional owners can view trip schedules, billing, and aircraft availability.',
+      budget:5800,cat:'Product Design',urgency:'high',status:'open',postedAt:'2026-04-28',claimedBy:null,claimedAt:null,
       milestones:[
-        {id:1,name:'Discovery & Moodboards',desc:'Research competitors and create visual direction moodboards for brand alignment.',price:1500,due:'2026-03-25',dels:['Competitor audit','Moodboard deck','Brand brief']},
-        {id:2,name:'Logo & Identity',desc:'Design logo concepts, establish color palette, and define brand typography.',price:2000,due:'2026-04-05',dels:['3 logo concepts','Color palette','Typography']},
-        {id:3,name:'Brand Guidelines Doc',desc:'Compile brand guidelines PDF and deliver a complete asset package.',price:1000,due:'2026-04-15',dels:['Brand guidelines PDF','Asset package']}
+        {id:1,name:'Discovery + User Flows',desc:'Interview 3 fractional owners and map the core user flows.',price:1800,due:'2026-05-12',dels:['3 owner interviews','Flow diagrams','Insights brief']},
+        {id:2,name:'HiFi Mockups',desc:'Design 8 polished mockups of the core portal screens.',price:2800,due:'2026-05-26',dels:['8 HiFi screens','Mobile breakpoints','Component notes']},
+        {id:3,name:'Stakeholder Review',desc:'Walkthrough deck and revision pass.',price:1200,due:'2026-06-02',dels:['Review deck','Revision round','Final files']}
       ]},
-    {id:501,name:'Investor Pitch Deck',desc:'Design a compelling investor pitch deck with data visualizations, narrative flow, and polished visuals for Series A fundraise.',
-      budget:3200,cat:'Product Design',urgency:'medium',status:'open',postedAt:'2026-03-08',claimedBy:null,claimedAt:null,
+    {id:501,postedById:'jon',name:'Whitney Capital — One-Pager Refresh',desc:'Redesign the Whitney Capital firm one-pager with updated AUM figures, partner bios, and refreshed visual identity.',
+      budget:1800,cat:'Print Design',urgency:'medium',status:'open',postedAt:'2026-04-26',claimedBy:null,claimedAt:null,
       milestones:[
-        {id:1,name:'Content & Structure',desc:'Outline the narrative, define content hierarchy, and identify key metrics.',price:1200,due:'2026-03-20',dels:['Story outline','Content hierarchy','Key metrics']},
-        {id:2,name:'Design & Polish',desc:'Create the full deck design with animations and a print-ready PDF.',price:2000,due:'2026-04-01',dels:['Full deck design','Animations','Print-ready PDF']}
+        {id:1,name:'Layout + Copy Pass',desc:'New layout direction with refreshed copy.',price:800,due:'2026-05-08',dels:['Layout v1','Copy edits']},
+        {id:2,name:'Final Design + Print Files',desc:'Final designed PDF + print-ready files.',price:1000,due:'2026-05-18',dels:['Final PDF','Print-ready files']}
       ]},
-    {id:502,name:'Internal Wiki Redesign',desc:'Redesign the internal knowledge base UI for better navigation, search, and content organization.',
-      budget:2800,cat:'UX Design',urgency:'low',status:'open',postedAt:'2026-03-05',claimedBy:null,claimedAt:null,
+    {id:502,postedById:'chris',name:'Donovan Holdings — Email Campaign Templates',desc:'Three branded email templates (announcement, newsletter, transactional) using the new Donovan Holdings brand system.',
+      budget:2200,cat:'Email Design',urgency:'low',status:'open',postedAt:'2026-04-20',claimedBy:null,claimedAt:null,
       milestones:[
-        {id:1,name:'Audit & Wireframes',desc:'Conduct a content audit, restructure the IA, and produce wireframes.',price:1200,due:'2026-04-01',dels:['Content audit','IA restructure','Wireframes']},
-        {id:2,name:'Visual Design',desc:'Deliver high-fidelity mockups, a component library, and a style guide.',price:1600,due:'2026-04-15',dels:['HiFi mockups','Component library','Style guide']}
+        {id:1,name:'Template Designs',desc:'Three template designs in HiFi.',price:1400,due:'2026-05-15',dels:['3 templates','Mobile previews']},
+        {id:2,name:'HTML Build + QA',desc:'Coded templates with cross-client testing.',price:800,due:'2026-05-25',dels:['HTML templates','Litmus QA']}
       ]},
   ],
   nextAvailId:503, bossFilter:'all', proposals:[], nextProposalId:1,
@@ -386,68 +396,77 @@ const G={
   draft:{name:'',client:'H9 Partners',cat:'Product Design',desc:'',rateType:'Milestone-Based',budget:'',
     milestones:[{id:1,name:'',desc:'',price:'',due:'',dels:[''],open:true,ci:0}]},
   projects:[
-    {id:1,ownerId:'jacob',name:'IterateIQ — Contract Tracker',client:'H9 Partners',
-      desc:'Two-week sprint: design & build a milestone-based contract tracker MVP with UX research plan.',
-      status:'active',color:'#FF8C00',cat:'Product Design',tags:['ux','mvp','research'],at:'2026-03-01',
-      budget:2000,rate:'Milestone-Based',
+    {id:1,ownerId:'jacob',contractors:['jacob'],postedById:'george',fromAvailId:9001,name:'Riviera Aviation — Site Updates',client:'Riviera Aviation',
+      desc:'Round of website updates from George: logo restoration, nav restructure, new Fractional Aircraft / Aircraft Charter / Aircraft Sales sections, and About Us refresh.',
+      status:'active',color:'#FF8C00',cat:'Web Design',tags:['web','copy','nav'],at:'2026-04-22',
+      budget:4500,rate:'Phase-Based',
       milestones:[
-        {id:1,name:'Product Spec + MVP',price:1000,status:'complete',paid:true,due:'2026-03-08',dels:['Product requirements doc','Clickable HTML prototype','UX research plan']},
-        {id:2,name:'Final Prototype',price:1000,status:'in-progress',paid:false,due:'2026-03-15',dels:['Refined prototype','Usability test report','Final design handoff']},
+        {id:1,name:'Restore PC-24 Mountain Logo',desc:'Swap the current homepage logo back to the original PC-24 in the mountains imagery.',price:400,status:'complete',paid:true,due:'2026-04-25',dels:['Updated hero logo','Source files']},
+        {id:2,name:'Restore "Riviera Aviation" Wordmark',desc:'Revert wordmark logo to the previous "Riviera Aviation" version site-wide.',price:300,status:'complete',paid:true,due:'2026-04-26',dels:['Wordmark in header & footer']},
+        {id:3,name:'Nav: "The Experience" → "Aircraft Management"',desc:'Rename top-level nav item across desktop and mobile.',price:200,status:'complete',paid:true,due:'2026-04-27',dels:['Updated nav links','Mobile menu']},
+        {id:4,name:'Move Aircraft Copy Up to Aircraft Management',desc:'Move the language currently under "The Aircraft" up into the Aircraft Management section.',price:400,status:'in-progress',paid:false,due:'2026-04-30',dels:['Restructured page','Redirect for old anchor']},
+        {id:5,name:'Nav: "The Aircraft" → "Fractional Aircraft"',desc:'Rename the nav item and update the page header to match.',price:200,status:'in-progress',paid:false,due:'2026-04-30',dels:['Updated nav','Page title']},
+        {id:6,name:'Fractional Aircraft Section Copy',desc:'Add the new long-form Fractional Aircraft positioning copy provided by George (PC-12 / PC-24 program, 5-year commitment).',price:600,status:'in-progress',paid:false,due:'2026-05-02',dels:['Section copy','Hero treatment']},
+        {id:7,name:'Remove Citation Jet Series',desc:'Pull all Citation Jet references and imagery from the site.',price:300,status:'upcoming',paid:false,due:'2026-05-04',dels:['Page removal','Cross-links cleaned']},
+        {id:8,name:'Add Aircraft Charter Section + Nav',desc:'New nav item and full section with the brokerage-partner positioning copy.',price:700,status:'upcoming',paid:false,due:'2026-05-06',dels:['New /charter page','Nav entry','Section design']},
+        {id:9,name:'Add Aircraft Sales Section + Nav',desc:'New nav item and full section for the Aircraft Sales Program copy.',price:800,status:'upcoming',paid:false,due:'2026-05-08',dels:['New /sales page','Nav entry','Section design']},
+        {id:10,name:'Update About Us Copy',desc:'Replace About Us copy with the boutique-firm-in-Orange-County positioning.',price:600,status:'upcoming',paid:false,due:'2026-05-10',dels:['Updated About page','Photography review']},
       ]},
-    {id:2,ownerId:'jacob',name:'Mobile App Redesign',client:'Apex Digital',
-      desc:'Full UX overhaul of the iOS flagship app — all core user flows, design system, and developer handoff.',
-      status:'active',color:'#0ea5e9',cat:'UX Design',tags:['mobile','ux','ios'],at:'2026-01-15',
-      budget:12400,rate:'Milestone-Based',
+    {id:2,ownerId:'jacob',contractors:['jacob','chuy'],postedById:'george',fromAvailId:9002,name:"Jay's Air Center — Marketing Refresh",client:"Jay's Air Center",
+      desc:'Full marketing site refresh for Jay\'s Air Center: new homepage hero, services pages, and contact flow. Co-built with Chuy.',
+      status:'complete',color:'#0ea5e9',cat:'Web Design',tags:['web','marketing','aviation'],at:'2026-02-01',
+      budget:7800,rate:'Phase-Based',
       milestones:[
-        {id:1,name:'Discovery + Wireframes',price:3000,status:'complete',paid:true,due:'2026-01-30',dels:['User interviews (8)','12 wireframe screens','Nav architecture']},
-        {id:2,name:'HiFi Mockups',price:5000,status:'complete',paid:true,due:'2026-02-15',dels:['40 HiFi screens','Design tokens','Dark mode variants']},
-        {id:3,name:'Developer Handoff',price:4400,status:'in-progress',paid:false,due:'2026-03-15',dels:['Exported assets','Component specs','Interactive prototype']},
+        {id:1,name:'Discovery + Sitemap',price:1800,status:'complete',paid:true,due:'2026-02-10',dels:['Stakeholder interviews','Sitemap','Content brief']},
+        {id:2,name:'Homepage + Services Design',price:3500,status:'complete',paid:true,due:'2026-02-25',dels:['Homepage HiFi','3 services pages','Mobile breakpoints']},
+        {id:3,name:'Build + Launch',price:2500,status:'complete',paid:true,due:'2026-03-15',dels:['Production build','SEO setup','Launch checklist']},
       ]},
-    {id:3,ownerId:'jacob',name:'Analytics Dashboard',client:'H9 Partners',
-      desc:'Internal reporting dashboard for product metrics, KPI tracking, and pipeline visibility.',
-      status:'complete',color:'#7c3aed',cat:'Product Design',tags:['data','dashboard'],at:'2025-11-10',
-      budget:5500,rate:'Fixed Price',
+    {id:3,ownerId:'jacob',contractors:['jacob'],postedById:'jon',fromAvailId:9003,name:'Whitney Capital — Investor Deck',client:'Whitney Capital',
+      desc:'Polished investor pitch deck for Q2 fundraise: narrative, data viz, and brand-aligned visual design.',
+      status:'active',color:'#7c3aed',cat:'Pitch Deck',tags:['deck','investor','design'],at:'2026-04-10',
+      budget:3200,rate:'Phase-Based',
       milestones:[
-        {id:1,name:'MVP Launch',price:3000,status:'complete',paid:true,due:'2026-01-05',dels:['8 reports live','Auth configured','Data pipelines']},
-        {id:2,name:'Optimization + Handoff',price:2500,status:'complete',paid:true,due:'2026-01-20',dels:['68% load time improvement','Full documentation','Team training']},
+        {id:1,name:'Narrative + Outline',price:1200,status:'complete',paid:true,due:'2026-04-18',dels:['Story outline','Section flow','Key metrics']},
+        {id:2,name:'Full Deck Design',price:2000,status:'in-progress',paid:false,due:'2026-05-05',dels:['Designed deck','Print-ready PDF','Editable source']},
       ]},
-    {id:4,ownerId:'jacob',name:'Onboarding Flow Redesign',client:'GrowthLab Co.',
-      desc:'Redesign new-user onboarding to improve D7 activation — user research, prototype, and usability testing.',
-      status:'paused',color:'#f59e0b',cat:'UX Design',tags:['ux','growth','onboarding'],at:'2026-01-28',
-      budget:6800,rate:'Milestone-Based',
+    {id:4,ownerId:'chuy',contractors:['chuy'],postedById:'chris',fromAvailId:9004,name:'Donovan Holdings — Brand Refresh',client:'Donovan Holdings',
+      desc:'Updated brand identity for Donovan Holdings: refined wordmark, color system, and brand guidelines doc.',
+      status:'active',color:'#f59e0b',cat:'Branding',tags:['brand','identity','guidelines'],at:'2026-04-15',
+      budget:4200,rate:'Phase-Based',
       milestones:[
-        {id:1,name:'Discovery Research',price:1800,status:'complete',paid:true,due:'2026-02-10',dels:['8 user interviews','Affinity map','Insights report']},
-        {id:2,name:'Prototype A',price:2500,status:'blocked',paid:false,due:'2026-02-28',dels:['Interactive prototype','A/B variant','Usability test plan']},
-        {id:3,name:'Final Prototype + Report',price:2500,status:'upcoming',paid:false,due:'2026-03-20',dels:['Final prototype','Test results','Recommendations']},
+        {id:1,name:'Wordmark + Palette',price:1800,status:'complete',paid:true,due:'2026-04-25',dels:['Wordmark concepts','Final wordmark','Color palette']},
+        {id:2,name:'Brand Guidelines Doc',price:2400,status:'in-progress',paid:false,due:'2026-05-08',dels:['Guidelines PDF','Asset package','Usage examples']},
       ]},
   ],
   iters:[
-    {id:1,pid:1,ver:'v0.1',title:'App Architecture + State Machine',status:'complete',date:'2026-03-03',hrs:8,
-      notes:'Scaffolded vanilla JS app with sidebar, state object, and render system.',changes:['App scaffold','State management','Sidebar nav'],feedback:''},
-    {id:2,pid:1,ver:'v0.2',title:'Dashboard + Contract Cards',status:'complete',date:'2026-03-05',hrs:12,
-      notes:'Built dashboard with earnings stats, project cards, and chart views.',changes:['Dashboard view','Stats row','Contract cards'],feedback:"Looks clean! Can we make the contract cards more prominent?"},
-    {id:3,pid:1,ver:'v0.3',title:'Contract Builder Widget',status:'complete',date:'2026-03-07',hrs:10,
-      notes:'Milestone-based contract creation form with budget sidebar and live summary.',changes:['Contract builder','Milestone builder','Budget sidebar'],feedback:''},
-    {id:4,pid:1,ver:'v1.0',title:'M1 Delivery — MVP + UX Research Plan',status:'complete',date:'2026-03-08',hrs:6,
-      notes:'Merged contract widget with MVP. Delivered all M1 items to H9 Partners.',changes:['Widget integration','UX research plan doc','M1 sign-off'],feedback:'Great work on M1! The research plan is very thorough.'},
-    {id:5,pid:1,ver:'v1.1',title:'Freelance-First Redesign',status:'in-progress',date:'2026-03-11',hrs:4,
-      notes:'Redesigning UI around the contract-tracking problem — Upwork/Toptal-inspired, milestone steps, earnings hero, feedback tracking.',changes:['New design system','Milestone timeline','Feedback field'],feedback:''},
-    {id:6,pid:2,ver:'v0.1',title:'User Research + Discovery',status:'complete',date:'2026-01-20',hrs:14,
-      notes:'8 user interviews completed. Identified 5 core pain points in current navigation.',changes:['Interview notes','Pain point map','HMW statements'],feedback:'Research is solid. Proceed to wireframes.'},
-    {id:7,pid:2,ver:'v0.2',title:'Wireframes (40 screens)',status:'complete',date:'2026-02-01',hrs:22,
-      notes:'Low-fidelity wireframes for all core user flows. Nav restructured per research.',changes:['40 wireframes','Nav restructure','User flows'],feedback:"Love the new nav! A few tweaks needed on the checkout flow."},
-    {id:8,pid:2,ver:'v0.3',title:'HiFi Mockups + Design System',status:'complete',date:'2026-02-15',hrs:28,
-      notes:'Full-color mockups with design token documentation. Dark mode complete.',changes:['40 HiFi screens','Design tokens','Dark mode'],feedback:'Excellent — ready to move to handoff.'},
-    {id:9,pid:2,ver:'v1.0',title:'Developer Handoff (In Progress)',status:'in-progress',date:'2026-03-01',hrs:12,
-      notes:'Exporting assets and writing component specs. 4 complex animations still TBD.',changes:['Assets exported','Component specs WIP'],feedback:''},
-    {id:10,pid:3,ver:'v1.0',title:'Dashboard MVP Launch',status:'complete',date:'2026-01-05',hrs:18,
-      notes:'8 core reports live. Auth configured, all data pipelines connected.',changes:['8 reports','Auth','Pipelines'],feedback:'Exactly what we needed — really clean work!'},
-    {id:11,pid:3,ver:'v1.1',title:'Performance + Optimization',status:'complete',date:'2026-01-20',hrs:11,
-      notes:'Load time reduced 68% (4.2s → 1.3s). Lazy loading and query caching added.',changes:['Query cache','4.2s→1.3s load time','Lazy loading'],feedback:'Incredible improvement. Signing off on final payment now.'},
-    {id:12,pid:4,ver:'v0.1',title:'User Research Sprint',status:'complete',date:'2026-02-01',hrs:8,
-      notes:'8 user interviews. Key insight: users want visible progress throughout onboarding.',changes:['8 interviews','Affinity map','Key insights'],feedback:'Good research. Move to prototyping.'},
-    {id:13,pid:4,ver:'v0.2',title:'Prototype A (Blocked)',status:'blocked',date:'2026-02-18',hrs:5,
-      notes:'60% complete — blocked pending 3rd-party auth API decision from client side.',changes:['60% prototype','Blocked: auth TBD'],feedback:"We're still working on the auth decision. Please stand by."},
+    // ── Riviera Aviation — Site Updates (pid:1) ─────────────────────────────────
+    {id:1,pid:1,ver:'v0.1',title:'PC-24 Mountain Logo Restored',status:'complete',date:'2026-04-23',hrs:2,
+      notes:'Swapped the homepage hero logo back to the original PC-24 in the mountains imagery. Source files re-organized.',changes:['Hero logo updated','Source files in /assets/logos','Old logo archived'],feedback:'Looks great — exactly the version I had in mind.'},
+    {id:2,pid:1,ver:'v0.2',title:'Riviera Aviation Wordmark Restored',status:'complete',date:'2026-04-25',hrs:1.5,
+      notes:'Restored "Riviera Aviation" wordmark across the header, footer, and favicon. Verified on mobile.',changes:['Header wordmark','Footer wordmark','Favicon updated'],feedback:''},
+    {id:3,pid:1,ver:'v0.3',title:'Nav Renamed: Aircraft Management',status:'complete',date:'2026-04-27',hrs:1,
+      notes:'Renamed "The Experience" to "Aircraft Management" in desktop and mobile nav. Verified anchor links still resolve.',changes:['Desktop nav','Mobile menu','Anchor link redirects'],feedback:'Perfect.'},
+    {id:4,pid:1,ver:'v0.4',title:'Aircraft Management Restructure (In Progress)',status:'in-progress',date:'2026-04-29',hrs:3,
+      notes:'Moving aircraft copy from "The Aircraft" up under Aircraft Management. About 70% complete — final layout review tomorrow.',changes:['Section restructure','Copy migrated','Layout review pending'],feedback:''},
+    {id:5,pid:1,ver:'v0.5',title:'Fractional Aircraft Copy Drafted',status:'in-progress',date:'2026-04-30',hrs:2,
+      notes:'Dropped George\'s long-form Fractional Aircraft positioning into the new section. Awaiting approval on hero treatment.',changes:['Section copy added','Hero treatment options'],feedback:''},
+    // ── Jay's Air Center (pid:2) ────────────────────────────────────────────────
+    {id:6,pid:2,ver:'v1.0',title:'Discovery + Sitemap Approved',status:'complete',date:'2026-02-08',hrs:14,
+      notes:'Completed stakeholder interviews and final sitemap. George signed off on the IA.',changes:['4 interviews','Sitemap v2','Content brief'],feedback:'Sitemap is exactly what we wanted.'},
+    {id:7,pid:2,ver:'v1.1',title:'Homepage + Services HiFi',status:'complete',date:'2026-02-22',hrs:22,
+      notes:'Full HiFi designs for homepage and three services pages. Mobile breakpoints included.',changes:['Homepage HiFi','3 services pages','Mobile breakpoints'],feedback:'Love the homepage hero. Ready to build.'},
+    {id:8,pid:2,ver:'v1.2',title:'Production Build + Launch',status:'complete',date:'2026-03-12',hrs:18,
+      notes:'Site is live. SEO meta verified, sitemap submitted, analytics in place.',changes:['Production build','SEO setup','Analytics live'],feedback:'Site looks fantastic. Final invoice approved.'},
+    // ── Whitney Capital — Investor Deck (pid:3) ─────────────────────────────────
+    {id:9,pid:3,ver:'v0.1',title:'Narrative + Outline Approved',status:'complete',date:'2026-04-17',hrs:6,
+      notes:'Story outline approved by Jon. Identified 8 key metrics for the deck.',changes:['Story outline','Section flow','Metric list'],feedback:'Great structure. Run with it.'},
+    {id:10,pid:3,ver:'v0.2',title:'Deck Design — First Pass',status:'in-progress',date:'2026-04-29',hrs:9,
+      notes:'12 of 18 slides designed. Working through the financials section next.',changes:['12 slides designed','Financial charts WIP'],feedback:''},
+    // ── Donovan Holdings — Brand (pid:4, owned by Chuy) ─────────────────────────
+    {id:11,pid:4,ver:'v0.1',title:'Wordmark + Palette',status:'complete',date:'2026-04-24',hrs:12,
+      notes:'Final wordmark approved on second round. Palette anchored on deep navy + warm gold.',changes:['Wordmark final','5-color palette','Usage rationale'],feedback:'Wordmark is perfect. Green-light the guidelines.'},
+    {id:12,pid:4,ver:'v0.2',title:'Brand Guidelines Doc — Drafting',status:'in-progress',date:'2026-04-30',hrs:7,
+      notes:'Guidelines doc is 60% drafted. Still need the Voice & Tone section and final asset exports.',changes:['Guidelines doc 60%','Asset prep'],feedback:''},
   ]
 };
 
@@ -556,14 +575,18 @@ function areaChart(data,kx,ky,color,h=110){
 
 // ── USER REGISTRY (localStorage) ─────────────────────────────────────────────
 const DEFAULT_USERS=[
-  {id:'jacob',name:'Jacob H.',initials:'JH',role:'contractor',gradient:'linear-gradient(135deg,#FF8C00,#142338)',desc:'Track projects, milestones, earnings & feedback'},
-  {id:'boss',name:'Boss — H9 Partners',initials:'H9',role:'boss',gradient:'linear-gradient(135deg,#0f1f30,#1e3a5f)',desc:'Post contracts, review contractor progress'},
-  {id:'chuy',name:'Chuy Hernandez',initials:'CH',role:'contractor',gradient:'linear-gradient(135deg,#0ea5e9,#142338)',desc:'Track projects, milestones, earnings & feedback'}
+  {id:'george',name:'George Sumner',initials:'GS',role:'boss',gradient:'linear-gradient(135deg,#0f1f30,#1e3a5f)',desc:'Managing Partner — post & review contracts'},
+  {id:'jon',name:'Jon Whitney',initials:'JW',role:'boss',gradient:'linear-gradient(135deg,#142338,#FF8C00)',desc:'Partner — post & review contracts'},
+  {id:'chris',name:'Chris Donovan',initials:'CD',role:'boss',gradient:'linear-gradient(135deg,#1e3a5f,#7c3aed)',desc:'Partner — post & review contracts'},
+  {id:'jacob',name:'Jacob H.',initials:'JH',role:'contractor',gradient:'linear-gradient(135deg,#FF8C00,#142338)',desc:'Track projects, phases, earnings & feedback'},
+  {id:'chuy',name:'Chuy Hernandez',initials:'CH',role:'contractor',gradient:'linear-gradient(135deg,#0ea5e9,#142338)',desc:'Track projects, phases, earnings & feedback'}
 ];
-function loadUsers(){try{const s=localStorage.getItem('iterateiq_users');if(s){const u=JSON.parse(s);return u.length?u:DEFAULT_USERS;}}catch(e){}return DEFAULT_USERS.map(u=>({...u}));}
-function saveUsers(){localStorage.setItem('iterateiq_users',JSON.stringify(USERS));}
+// Bumped key to v2 to clear stale demo users from prior sessions
+function loadUsers(){try{const s=localStorage.getItem('iterateiq_users_v2');if(s){const u=JSON.parse(s);return u.length?u:DEFAULT_USERS;}}catch(e){}return DEFAULT_USERS.map(u=>({...u}));}
+function saveUsers(){localStorage.setItem('iterateiq_users_v2',JSON.stringify(USERS));}
 let USERS=loadUsers();
-if(!USERS.find(u=>u.id==='chuy')){USERS.push(DEFAULT_USERS.find(u=>u.id==='chuy'));}
+// Ensure all default users exist (handles partial localStorage from prior sessions)
+DEFAULT_USERS.forEach(du=>{if(!USERS.find(u=>u.id===du.id))USERS.push({...du});});
 saveUsers();
 
 // ── LOGIN ─────────────────────────────────────────────────────────────────────
@@ -659,7 +682,7 @@ function updateContractNav(){
 }
 function sidebarHtml(){
   if(G.role==='boss') return `<aside class="sidebar">
-    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">H9 Partners — Boss Panel</div></div>
+    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">Manager Console</div><div class="proto-badge">Prototype</div></div>
     <div class="sb-section">
       <div class="sb-lbl">Management</div>
       <div class="nav-item ${G.view==='boss-dashboard'?'active':''}" data-v="boss-dashboard" onclick="nav('boss-dashboard')">
@@ -682,6 +705,10 @@ function sidebarHtml(){
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Contractors
       </div>
+      <div class="nav-item ${G.view==='contacts'?'active':''}" data-v="contacts" onclick="nav('contacts')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M4 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Contacts
+      </div>
     </div>
     <div class="sb-footer">
       <div class="user-row">
@@ -695,7 +722,7 @@ function sidebarHtml(){
   // Contractor sidebar
   const openAvail=G.available.filter(a=>a.status==='open').length;
   return `<aside class="sidebar">
-    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">H9 Partners — Contract Platform</div></div>
+    <div class="sb-brand"><div class="sb-logo">Iterate<span>IQ</span></div><div class="sb-tag">Contractor Workspace</div><div class="proto-badge">Prototype</div></div>
     <div class="sb-section">
       <div class="sb-lbl">Overview</div>
       <div class="nav-item ${G.view==='dashboard'?'active':''}" data-v="dashboard" onclick="nav('dashboard')">
@@ -717,6 +744,10 @@ function sidebarHtml(){
       <div class="nav-item ${G.view==='feedback'?'active':''}" data-v="feedback" onclick="nav('feedback')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Feedback <span class="nav-badge nav-badge-blue">${myFeedback().length}</span>
+      </div>
+      <div class="nav-item ${G.view==='contacts'?'active':''}" data-v="contacts" onclick="nav('contacts')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M4 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Contacts
       </div>
     </div>
     <div class="sb-divider"></div>
@@ -867,7 +898,7 @@ function onboardingView(){
     const ctrCards=`
         <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0">
           <span style="font-size:18px">📋</span>
-          <div><div style="font-size:13px;font-weight:600;color:#15803d">Browse Open Contracts</div><div style="font-size:11px;color:#4B5563">Find work posted by H9 Partners</div></div>
+          <div><div style="font-size:13px;font-weight:600;color:#15803d">Browse Open Contracts</div><div style="font-size:11px;color:#4B5563">Find work posted by your managers</div></div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#EFF6FF;border-radius:8px;border:1px solid #BFDBFE">
           <span style="font-size:18px">💰</span>
@@ -937,6 +968,7 @@ function render(){
     else if(G.view==='boss-proposals')main.innerHTML=bossProposalsView();
     else if(G.view==='boss-assigned')main.innerHTML=bossAssignedView();
     else if(G.view==='boss-overview')main.innerHTML=bossOverviewView();
+    else if(G.view==='contacts')main.innerHTML=contactsView();
     else main.innerHTML=bossView();
   } else {
     if(G.view==='dashboard')main.innerHTML=dashView();
@@ -946,7 +978,41 @@ function render(){
     else if(G.view==='available')main.innerHTML=availableWorkView();
     else if(G.view==='accepted')main.innerHTML=acceptedContractsView();
     else if(G.view==='feedback')main.innerHTML=feedbackView();
+    else if(G.view==='contacts')main.innerHTML=contactsView();
   }
+}
+
+// ── CONTACTS ──────────────────────────────────────────────────────────────────
+function contactsView(){
+  const me=G.activeUser?G.activeUser.id:null;
+  const managers=USERS.filter(u=>u.role==='boss');
+  const contractors=USERS.filter(u=>u.role==='contractor');
+  const renderRow=u=>{
+    const isMe=u.id===me;
+    return `<div class="contact-card">
+      <div class="contact-avatar" style="background:${u.gradient}">${e(u.initials)}</div>
+      <div class="contact-meta">
+        <div class="contact-name">${e(u.name)}${isMe?' <span style="font-size:10px;color:#9CA3AF;font-weight:500;margin-left:6px">(you)</span>':''}</div>
+        <div class="contact-role">${u.role==='boss'?'Manager · '+(u.desc||''):'Contractor · '+(u.desc||'')}</div>
+      </div>
+      <div class="contact-actions">
+        ${isMe?'':`<button class="btn btn-outline btn-sm" onclick="alert('Messaging coming soon — for now use the Feedback tab on any shared contract.')">Message</button>`}
+      </div>
+    </div>`;
+  };
+  return `<div class="topbar">
+    <div><div class="topbar-title">Contacts</div><div class="topbar-sub">${managers.length} manager${managers.length!==1?'s':''} · ${contractors.length} contractor${contractors.length!==1?'s':''}</div></div>
+  </div>
+  <div style="padding:24px 28px">
+    <div style="margin-bottom:24px">
+      <div style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Managers</div>
+      <div style="display:flex;flex-direction:column;gap:10px">${managers.map(renderRow).join('')}</div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Contractors</div>
+      <div style="display:flex;flex-direction:column;gap:10px">${contractors.map(renderRow).join('')}</div>
+    </div>
+  </div>`;
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
@@ -1215,9 +1281,12 @@ function contractDetailView(){
       </button>
       <div style="width:1px;height:22px;background:#E8ECF0"></div>
       <div style="width:10px;height:10px;border-radius:50%;background:${p.color}"></div>
-      <div><div class="topbar-title">${e(p.name)}</div><div class="topbar-sub">${e(p.client)} · ${e(p.cat)}</div></div>
+      <div><div class="topbar-title">${e(p.name)}</div><div class="topbar-sub">${e(p.client)} · ${e(p.cat)}${p.postedById?(()=>{const m=USERS.find(u=>u.id===p.postedById);return m?` · Posted by ${e(m.name)}`:'';})():''}</div></div>
     </div>
-    <button class="btn btn-primary btn-sm" onclick="openIterModal()">+ Log Update</button>
+    <div style="display:flex;align-items:center;gap:14px">
+      ${(()=>{const cs=p.contractors&&p.contractors.length?p.contractors:[p.ownerId];const stack=cs.map(cid=>{const u=USERS.find(uu=>uu.id===cid);if(!u)return'';return `<div class="avatar-mini" style="background:${u.gradient}" title="${e(u.name)}">${e(u.initials)}</div>`;}).join('');return cs.length>1?`<div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:#6B7280;font-weight:600">Team</span><div class="assign-stack">${stack}</div></div>`:'';})()}
+      <button class="btn btn-primary btn-sm" onclick="openIterModal()">+ Log Update</button>
+    </div>
   </div>
   <div class="content">
     <div class="detail-stats">
@@ -1540,7 +1609,7 @@ function submitContract(){
   updateContractNav();
 }
 function resetDraft(){
-  G.draft={name:'',client:'H9 Partners',cat:'Product Design',desc:'',rateType:'Milestone-Based',budget:'',
+  G.draft={name:'',client:'',cat:'Product Design',desc:'',rateType:'Milestone-Based',budget:'',
     milestones:[{id:Date.now(),name:'',desc:'',price:'',due:'',dels:[''],open:true,ci:0}]};
   G.contractOk=false;render();
 }
@@ -1702,7 +1771,7 @@ function availableWorkView(){
   }).join('');
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Open Contracts</div><div class="topbar-sub">${all.length} contract${all.length!==1?'s':''} available from H9 Partners</div></div>
+    <div><div class="topbar-title">Open Contracts</div><div class="topbar-sub">${all.length} contract${all.length!==1?'s':''} available from your managers</div></div>
   </div>
   <div class="content" style="padding-bottom:0">
     <div class="filter-search-wrap">
@@ -1851,10 +1920,12 @@ function confirmProposal(propId){
     const pp=prop.proposedPrices.find(x=>x.msId===m.id);
     return {id:m.id,name:m.name,desc:m.desc||'',price:pp?pp.price:m.price,status:i===0?'in-progress':'upcoming',paid:false,due:m.due,dels:m.dels?[...m.dels]:[]};
   });
-  G.projects.push({id:nid,ownerId:prop.contractorId,name:avail.name,client:'H9 Partners',desc:avail.desc,
+  const poster=avail.postedById?USERS.find(u=>u.id===avail.postedById):null;
+  const clientName=poster?poster.name:'Manager';
+  G.projects.push({id:nid,ownerId:prop.contractorId,contractors:[prop.contractorId],postedById:avail.postedById||null,name:avail.name,client:clientName,desc:avail.desc,
     status:'active',color:PCOLS[ci],cat:avail.cat,
     tags:[avail.cat.toLowerCase().split('/')[0].trim(),avail.urgency],
-    at:prop.confirmedAt,budget:prop.totalProposed,rate:'Milestone-Based',milestones:milestones,fromAvailId:prop.availId});
+    at:prop.confirmedAt,budget:prop.totalProposed,rate:'Phase-Based',milestones:milestones,fromAvailId:prop.availId});
   render();
 }
 function contractorDeclineProposal(propId){
@@ -2115,7 +2186,7 @@ function bossView(){
   const activeProjs=G.projects.filter(p=>p.status==='active');
 
   return `<div class="topbar">
-    <div><div class="topbar-title">Boss Dashboard</div><div class="topbar-sub">H9 Partners — Contract Management</div></div>
+    <div><div class="topbar-title">Manager Dashboard</div><div class="topbar-sub">${G.activeUser?e(G.activeUser.name)+' · ':''}Contract Management</div></div>
     <button class="btn btn-primary" onclick="nav('boss-post')">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Post Contract
     </button>
