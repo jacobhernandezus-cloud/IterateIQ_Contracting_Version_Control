@@ -1,108 +1,94 @@
-# IterateIQ Demo Walkthrough — George, Jon, Chris
+# IterateIQ Demo Walkthrough — 5-Tool Script
 
 **URL:** https://iterateiq-h9.netlify.app
-**Posture:** *"This is the working prototype. Once you all say yes, I'll wire it to a real backend in the next two weeks so you can actually use it day-to-day."*
+**Audience:** George, Jon, Chris, Daniel
+**Time:** ~6 minutes
 
-> **Before the call:** Open the URL once, click around, then `localStorage.clear()` in DevTools console + hard-refresh (Cmd+Shift+R). This guarantees a clean state with all 5 default users visible on the login screen.
-
----
-
-## Frame the demo (30 sec)
-
-> "I built this to make our work together more organized. Right now everything lives in email — I lose track of what's been approved, what's been paid, what's next. IterateIQ replaces that mess with one place where you post work, I track progress, and we both see exactly where every project stands. Let me show you."
+> **Before the call:** Open the URL, `localStorage.clear()` in DevTools, hard-refresh (Cmd+Shift+R). All 6 profiles should appear on the login picker.
 
 ---
 
-## Act 1 — The Manager view (your investor pitch) — ~3 min
+## Frame (20 sec)
 
-**Click:** *George Sumner* on the login screen.
-
-**Talking points as you click through:**
-
-1. **Manager Dashboard** (lands here automatically)
-   - "This is what George sees when he logs in. KPIs at the top — active contracts, total spend, pending phases."
-   - Point at the active project list — Riviera Aviation Site Updates is right there.
-
-2. **Click "Post Contract"** in the sidebar
-   - "When George wants me to do work, he posts a contract here. He sets the price, the timeline, breaks the work into phases, attaches files. No more 'can you take a look at the email I sent last week.'"
-   - Don't actually fill it out — just show the form.
-
-3. **Click "Assigned"** in sidebar
-   - "Once a contractor accepts, the work shows up here. He can see who's on what, what's in progress, what's blocked."
-
-4. **Click "Contractors"** (boss-overview)
-   - "This is the contractor leaderboard. He can see total spend by contractor, completion rate, average rating. Helps with future hire decisions."
-
-5. **Click "Contacts"** (NEW — directory)
-   - "Quick directory of everyone in the system. He can DM Jon or Chris about a shared project, or message me directly."
+> "Right now our work lives in email — I lose track of what's approved, what's paid, what's next. IterateIQ is one place where you post work, I track progress, and we both see every project's status. Let me show you the five things I'd actually use day-to-day."
 
 ---
 
-## Act 2 — Logout, log in as Jacob (the contractor side) — ~5 min
+## Tool 1 · Phase Tracker — *the "where do things stand" view* (60 sec)
 
-**Click:** Logout (bottom of sidebar) → click *Jacob H.*
+**Login as Jacob H. → click the Riviera Aviation contract.**
 
-1. **Contractor Dashboard**
-   - Point at the earnings hero number, active contracts.
-   - "This is my view. I see what I'm working on, what I've earned, what's outstanding."
+- 10 phases, color-coded: green = complete + paid, blue = in-progress, gray = upcoming.
+- Point at phases 1–3 (paid), 4–6 (in progress), 7–10 (upcoming).
+- "One glance, you know exactly where every dollar of the contract is."
 
-2. **Click the Riviera Aviation contract** (in sidebar or main grid)
-   - **THIS IS THE KEY MOMENT.** George's email is now a real contract.
-   - "This contract was posted by George — see it right there. The 10 phases come straight from his email last week:"
-     - First 3 phases ✅ done and paid (logo, wordmark, nav rename)
-     - Phases 4–6 in progress (Aircraft Management restructure, Fractional Aircraft copy)
-     - Phases 7–10 upcoming
-   - Scroll down to the **Activity Log** — show the work history with George's actual feedback ("Looks great — exactly the version I had in mind").
-   - Point at the **+ Log Update** button. "When I finish a phase, I log an update here. George gets notified, reviews, approves, and the payment gets marked."
+## Tool 2 · Log Update — *the polish moment* (90 sec)
 
-3. **Click "Earnings"** in sidebar
-   - "Outstanding payments, completed payments, year-over-year totals. No more chasing invoices."
+**Same contract → click "+ Log Update".**
 
-4. **Click "Open Contracts"** in sidebar
-   - "These are unclaimed contracts your three are posting. I see Riviera owner portal mockups (George), Whitney Capital one-pager (Jon), Donovan Holdings email templates (Chris). I claim what I can take on."
+- Type a quick update note.
+- **Drag a screenshot or PDF into the attachment area.** This is the new media attachment feature — works for screenshots, video, PDFs.
+- Toggle "Request feedback from Project Owner" → submit.
+- "When I finish work, this is how George reviews it. The attachment shows up in the Activity Log and triggers a feedback request."
 
-5. **Click "Feedback"** in sidebar
-   - "Every piece of feedback George/Jon/Chris leaves on my work lives here. Searchable, with star ratings. Ends the 'wait what did you say last time' problem."
+## Tool 3 · Phase Builder (Post Project) — *George's flow* (90 sec)
 
-6. **Click into the Jay's Air Center contract** (completed, paid)
-   - Show the **multi-contractor "Team" badge** at the top — Jacob + Chuy avatars stacked.
-   - "When work needs more than one contractor, both get assigned. Both can log updates. Manager sees the team at a glance."
+**Logout → login as George Sumner → "Post Contract" in sidebar.**
 
----
+- Show the form: name, client, description, budget, rate type (Phase-Based / Hourly / Retainer).
+- Add 2 phases inline — name, price, due date, deliverables.
+- "George sets the price, timeline, attachments, per-phase pricing. No more 'I think we said $4,500 in that email last week.'"
+- Don't submit — just walk through it.
 
-## Act 3 — The pitch — ~1 min
+## Tool 4 · Proposals Review — *the cleanest interaction* (60 sec)
 
-> "Today this is a working prototype with seed data. The next step is the real version — passwords, real database, email notifications when George posts work or I log a phase, file uploads. Two weeks of focused build, you all start using it day-to-day. The point isn't the prototype, the point is: **this is how I think we should work together.** Less email, more clarity, every dollar tracked."
+**George view → click "Proposals" in sidebar.**
 
-**Then ask:** *"What's missing? What would make this an obvious yes?"*
+- Pending / Accepted / Declined columns.
+- Click into a pending proposal → contractor cover note + per-phase pricing.
+- Hover the **Accept** / **Decline** buttons (don't click).
+- "When I respond to an Open Contract, George reviews it here. One click to accept, contract goes live."
 
----
+## Tool 5 · Feedback Hub — *closes the quality loop* (45 sec)
 
-## Quick FAQ (anticipated questions)
+**Logout → login as Jacob H. → "Feedback" in sidebar.**
 
-**"Who pays for the platform?"**
-You do — it's your tool. They use it free. Hosting + Supabase = ~$25/mo at this scale.
+- Show all reviews from George, Jon, Chris, Daniel — star ratings + text.
+- Filter by contract or rating.
+- "Every piece of feedback you four leave is searchable here. No more 'wait, what did you say last time?'"
 
-**"Can we use it for [other contractor]?"**
-Yes — that's the point. They post one contract, multiple contractors can apply. They pick.
+## Bonus · Share Project (15 sec)
 
-**"What if I want to see only my contracts, not Jon's?"**
-"In v2, each manager has their own filtered view by default + a 'firm-wide' toggle. Right now everyone sees everything."
-
-**"What about file attachments?"**
-"V2. Supabase Storage. Drag-drop on phase updates, contract postings, feedback."
-
-**"How do payments actually happen?"**
-"Phase 1: marked-as-paid is manual. Phase 2 (after we're using it): Stripe Connect for direct payouts."
+**Any contract page → "Share" button at top right.**
+- Generates a shareable URL or assigns directly to a contractor.
 
 ---
 
-## If anything looks broken on the live URL
+## The pitch (45 sec)
+
+> "Today this is a working prototype with seed data. Two weeks of focused build gets it onto a real backend with auth, file storage, and email notifications — Daniel just joined as a Project Owner so the four of you all use it day-to-day. The point isn't the prototype, the point is: **this is how I think we should work together.** Less email, more clarity, every dollar tracked."
+
+**Ask:** *"What's missing? What would make this an obvious yes?"*
+
+---
+
+## Quick FAQ
+
+**"Who pays for the platform?"** I do — it's my tool. You use it free. Hosting + Supabase ≈ $25/mo at this scale.
+
+**"Can multiple contractors work on one contract?"** Yes — show the Jay's Air Center contract; Jacob + Chuy stacked avatars at top.
+
+**"What if I want to see only my contracts, not Jon's?"** v2 has per-owner filtered view + a firm-wide toggle. Today everyone sees everything.
+
+**"How do payments happen?"** Phase 1: marked-as-paid is manual. Phase 2 (post-launch): Stripe Connect for direct payouts.
+
+---
+
+## If the live URL looks broken
 
 ```bash
-# Hard reset and redeploy
 cd "/Users/jakeher831/Documents/H9 Contract Work/IterateIQ"
 netlify deploy --prod --dir "."
 ```
 
-Then in the browser: DevTools → Application → Local Storage → clear `iterateiq-h9.netlify.app` → hard refresh.
+Then in browser: DevTools → Application → Local Storage → clear `iterateiq-h9.netlify.app` → hard refresh.
