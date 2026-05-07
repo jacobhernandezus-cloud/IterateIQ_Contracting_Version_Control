@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IterateIQ — Persona Login Preview</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;color:#1a1a2e;background:#FAF8F4}
+
+  /* ── LOGIN SCREEN (matches IterateIQ_MVP.html exactly) ─────────── */
+  .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f1f30 0%,#163352 60%,#1e3a5f 100%)}
+  .login-card{background:#fff;border-radius:20px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+  .login-logo{font-size:28px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:4px;letter-spacing:-.5px}
+  .login-logo span{color:#FF8C00}
+  .login-sub{text-align:center;font-size:12px;color:#9CA3AF;margin-bottom:28px}
+  .role-btn{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:14px;border:2px solid #E8ECF0;background:#FAFBFC;cursor:pointer;transition:all .18s;margin-bottom:12px;width:100%;font-family:inherit}
+  .role-btn:hover{border-color:#FF8C00;background:#FFF8F0;transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,140,0,.12)}
+  .role-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff;font-weight:700;letter-spacing:.5px}
+  .role-info{flex:1;text-align:left}
+  .role-name{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:2px}
+  .role-desc{font-size:11px;color:#9CA3AF}
+  .role-cta{font-size:12px;font-weight:600;color:#FF8C00;opacity:0;transform:translateX(-4px);transition:all .18s;flex-shrink:0;white-space:nowrap}
+  .role-btn:hover .role-cta{opacity:1;transform:translateX(0)}
+  .signup-cta{margin-top:18px;padding-top:14px;border-top:1px solid #E8ECF0;text-align:center}
+  .signup-cta button{background:none;border:none;font-family:inherit;font-size:13px;font-weight:600;color:#142338;cursor:pointer;padding:6px 12px;border-radius:8px;transition:all .15s}
+  .signup-cta button:hover{background:#FFF8F0;color:#FF8C00}
+
+  /* ── DASHBOARD (next-iteration preview) ────────────────────────── */
+  .app{min-height:100vh;background:#FAF8F4}
+  .topbar{background:#0f1f30;color:#fff;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #FF8C00}
+  .topbar-logo{font-size:20px;font-weight:800;letter-spacing:-.3px}
+  .topbar-logo span{color:#FF8C00}
+  .topbar-user{display:flex;align-items:center;gap:12px;font-size:13px}
+  .topbar-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  .topbar-back{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+  .topbar-back:hover{background:rgba(255,140,0,.18);border-color:#FF8C00}
+
+  .container{max-width:1280px;margin:0 auto;padding:28px}
+
+  .hero{background:linear-gradient(135deg,#0f1f30 0%,#1e3a5f 100%);border-radius:16px;padding:28px 32px;color:#fff;margin-bottom:24px;position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,140,0,.18) 0%,transparent 70%)}
+  .hero-eyebrow{font-size:11px;font-weight:700;color:#FF8C00;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px}
+  .hero-title{font-size:28px;font-weight:800;margin:0 0 6px;letter-spacing:-.5px}
+  .hero-sub{font-size:14px;color:rgba(255,255,255,.72);max-width:680px;line-height:1.55}
+
+  .section-title{font-size:11px;font-weight:700;color:#142338;letter-spacing:4px;text-transform:uppercase;margin:8px 0 14px}
+  .section-title-amber{color:#FF8C00}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:24px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+
+  .card{background:#fff;border:1.5px solid #EFE9DD;border-radius:14px;padding:22px;position:relative;transition:all .18s}
+  .card:hover{border-color:#FF8C00;box-shadow:0 6px 28px rgba(15,31,48,.08);transform:translateY(-2px)}
+  .card-accent{position:absolute;left:0;top:18px;bottom:18px;width:4px;background:#FF8C00;border-radius:4px}
+  .card-tag{font-size:10px;font-weight:700;color:#C0392B;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+  .card-tag.solved{color:#16a34a}
+  .card-title{font-size:17px;font-weight:800;color:#142338;margin:0 0 8px;letter-spacing:-.2px}
+  .card-pain{font-size:13px;color:#6B7280;line-height:1.55;margin-bottom:14px;font-style:italic;border-left:2px solid #EFE9DD;padding-left:10px}
+  .card-fix-label{font-size:10px;font-weight:700;color:#16a34a;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .card-fix-label::before{content:'✓';width:14px;height:14px;background:#16a34a;color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+  .card-fix{font-size:13px;color:#142338;line-height:1.55;font-weight:500}
+  .feature-pill{display:inline-block;background:#FFF4E6;color:#FF8C00;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-top:10px;margin-right:6px}
+
+  .quote{background:#142338;color:#FAF8F4;border-radius:14px;padding:24px 28px;margin-bottom:24px;border-left:5px solid #FF8C00;font-style:italic;font-size:16px;line-height:1.55}
+  .quote::before{content:'"';font-size:48px;color:#FF8C00;line-height:0;vertical-align:-12px;margin-right:6px;font-family:Georgia,serif}
+  .quote-attr{margin-top:10px;font-style:normal;font-size:12px;color:#FF8C00;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+  .summary-bar{background:#fff;border:1.5px solid #EFE9DD;border-radius:14px;padding:18px 22px;display:flex;gap:24px;margin-bottom:24px;align-items:center;flex-wrap:wrap}
+  .summary-stat{display:flex;flex-direction:column}
+  .summary-num{font-size:24px;font-weight:800;color:#FF8C00;letter-spacing:-.5px}
+  .summary-label{font-size:11px;color:#6B7280;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+  .summary-divider{width:1px;height:36px;background:#EFE9DD}
+
+  .footnote{text-align:center;color:#9CA3AF;font-size:11px;margin-top:32px;letter-spacing:2px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<!-- ───────── LOGIN ───────── -->
+<div id="login" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Iterate<span>IQ</span></div>
+    <div class="login-sub">Pick a profile to continue</div>
+
+    <button class="role-btn" onclick="showDashboard('marcus')">
+      <div class="role-icon" style="background:linear-gradient(135deg,#FF8C00,#142338)">MC</div>
+      <div class="role-info">
+        <div class="role-name">Marcus Chen — Freelancer</div>
+        <div class="role-desc">Track projects, phases, earnings &amp; feedback</div>
+      </div>
+      <span class="role-cta">Sign in →</span>
+    </button>
+
+    <button class="role-btn" onclick="showDashboard('linda')">
+      <div class="role-icon" style="background:linear-gradient(135deg,#0f1f30,#1e3a5f)">LR</div>
+      <div class="role-info">
+        <div class="role-name">Linda Reyes — Project Owner</div>
+        <div class="role-desc">Post &amp; manage projects across the team</div>
+      </div>
+      <span class="role-cta">Sign in →</span>
+    </button>
+
+    <div class="signup-cta">
+      <button>New here? Create a profile →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────── DASHBOARD ───────── -->
+<div id="dashboard" class="app" style="display:none">
+  <div class="topbar">
+    <div class="topbar-logo">Iterate<span>IQ</span></div>
+    <div class="topbar-user">
+      <div id="topbar-avatar" class="topbar-avatar"></div>
+      <div>
+        <div id="topbar-name" style="font-weight:700"></div>
+        <div id="topbar-role" style="font-size:11px;color:rgba(255,255,255,.55)"></div>
+      </div>
+      <button class="topbar-back" onclick="backToLogin()">← Switch profile</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-eyebrow">Welcome back</div>
+      <h1 id="hero-title" class="hero-title"></h1>
+      <p id="hero-sub" class="hero-sub"></p>
+    </div>
+
+    <div id="quote" class="quote"></div>
+
+    <div id="summary" class="summary-bar"></div>
+
+    <div class="section-title">The Pain Points We're Solving — <span class="section-title-amber">Next Iteration</span></div>
+    <div id="pain-grid" class="grid"></div>
+
+    <div class="footnote">IterateIQ v3.0 — In Development</div>
+  </div>
+</div>
+
+<script>
+const PERSONAS = {
+  marcus: {
+    name: "Marcus Chen",
+    initials: "MC",
+    role: "Freelancer",
+    avatarBg: "linear-gradient(135deg,#FF8C00,#142338)",
+    heroTitle: "Good morning, Marcus.",
+    heroSub: "Three contracts active, two phases shipping this week. Here's how the next iteration of IterateIQ removes the friction from your day-to-day.",
+    quote: "Every hour I spend hunting through Slack threads to figure out what I owe a client is an hour I'm not getting paid for.",
+    summary: [
+      { num: "3", label: "Active Contracts" },
+      { num: "$18.4K", label: "Outstanding Invoices" },
+      { num: "12", label: "Open Deliverables" },
+      { num: "4.9★", label: "Client Rating" }
+    ],
+    pains: [
+      {
+        title: "Scope Creep with No Paper Trail",
+        pain: "Clients ask for 'one more small thing' over Slack and email. Without a record, those asks pile into unpaid work and hard conversations later.",
+        fix: "Every client request is captured as a tracked Change Request — logged against a phase, priced, and surfaced for client approval before work starts.",
+        features: ["Change Request Log", "Auto Slack/Email Capture", "Approval Threshold Alerts"]
+      },
+      {
+        title: "Chasing Invoices &amp; Payment",
+        pain: "Work ships, but payment lags. Marcus burns hours each month following up, reconciling hours, and re-explaining what was delivered for which milestone.",
+        fix: "Phase completion auto-generates an itemized invoice tied to the exact deliverables. Reminder cadence runs in the background — no follow-up emails required.",
+        features: ["One-Click Invoicing", "Payment Reminders", "Stripe / ACH Direct"]
+      },
+      {
+        title: "Context-Switching Across Clients",
+        pain: "Juggling 3-6 projects in parallel means constant mental reload. When a client pings him, it takes 20 minutes to remember where they left off.",
+        fix: "A unified Today view surfaces every active client thread in one place — last message, blocked items, what's due — so context is recovered in seconds, not minutes.",
+        features: ["Today Feed", "Per-Client Quick Switch", "Resume Where You Left Off"]
+      },
+      {
+        title: "Communicating Progress to Clients",
+        pain: "Clients constantly ask 'where are we?' Marcus rebuilds the answer by hand each time — often as a Loom or screenshot dump.",
+        fix: "Every contract has a shareable client-facing link with a live phase checklist, no login required. Clients self-serve. Marcus stops repeating himself.",
+        features: ["Shareable Client Link", "Phase Checklist View", "Auto Weekly Digest"]
+      },
+      {
+        title: "Reconciling Delivered Work to a Milestone",
+        pain: "When invoicing time hits, Marcus has to manually map what he actually shipped to which phase was scoped — across Figma, GitHub, and Notion.",
+        fix: "Deliverables link directly to their parent phase at creation. The activity log writes itself. Invoicing pulls the proof, not the memory.",
+        features: ["Phase-Linked Deliverables", "Auto Activity Log", "Proof Bundle Export"]
+      },
+      {
+        title: "Knowing Which Project Needs Attention",
+        pain: "Out of 6 contracts, which one is on fire? Without a signal, Marcus discovers blockers reactively — usually after the client emails him.",
+        fix: "A real-time priority score flags projects by urgency: blocked work, approaching due dates, unanswered client messages, payment lag.",
+        features: ["Priority Score", "Smart Inbox", "Push + Email Digest"]
+      }
+    ]
+  },
+  linda: {
+    name: "Linda Reyes",
+    initials: "LR",
+    role: "Project Owner",
+    avatarBg: "linear-gradient(135deg,#0f1f30,#1e3a5f)",
+    heroTitle: "Welcome back, Linda.",
+    heroSub: "14 active engagements across your team. Here's how the next iteration of IterateIQ replaces your status meetings with a single source of truth.",
+    quote: "By the time I hear a project is in trouble, the client has already heard it first.",
+    summary: [
+      { num: "14", label: "Active Contracts" },
+      { num: "8", label: "Contractors" },
+      { num: "$240K", label: "Portfolio Value" },
+      { num: "3", label: "At-Risk Projects" }
+    ],
+    pains: [
+      {
+        title: "Status Updates Live in 14 Places",
+        pain: "Her team's progress is scattered across Slack DMs, email threads, spreadsheets, and weekly standups. Pulling a real picture means chasing every contractor individually.",
+        fix: "A live Portfolio View consolidates every contract, every phase, every contractor — auto-updated as work happens. The 9am standup becomes obsolete.",
+        features: ["Portfolio View", "Live Phase Tracker", "No More Status Meetings"]
+      },
+      {
+        title: "Surprise Budget Overruns",
+        pain: "She finds out a project is over budget the week it ships, not the week it goes off-track. By the time she sees the variance, it's already a client conversation.",
+        fix: "Budget burn is monitored continuously. Variance thresholds trigger alerts the moment a phase trends red — days, not weeks, before the overrun lands.",
+        features: ["Budget Burn Alerts", "Variance Forecasting", "Phase Health Score"]
+      },
+      {
+        title: "No View of Who's Overloaded",
+        pain: "Some contractors are buried, others have capacity — but she has no way to see workload across the team without asking each one directly.",
+        fix: "A Team Workload board shows active hours per contractor, deliverables in flight, and capacity buffer at a glance. Reassignment is one drag away.",
+        features: ["Workload Board", "Capacity Forecasting", "One-Click Reassign"]
+      },
+      {
+        title: "Time Lost in Status Meetings",
+        pain: "Half her week is consumed by check-ins with contractors and clients — most of which exist only because the data isn't visible anywhere else.",
+        fix: "Async status updates auto-generated from activity logs replace recurring sync meetings. Clients and stakeholders read instead of attend.",
+        features: ["Async Status Reports", "Auto Standup Recap", "Calendar Time Saved"]
+      },
+      {
+        title: "Reporting Up to Stakeholders",
+        pain: "Every Monday she manually rebuilds a portfolio summary for partners and clients — copy-pasting numbers between spreadsheets and slides.",
+        fix: "One-click weekly reports export the portfolio state to PDF, CSV, or branded slide deck. Custom views per audience: client, partner, internal.",
+        features: ["One-Click Reports", "PDF / CSV / Deck Export", "Audience-Aware Views"]
+      },
+      {
+        title: "Catching Problems Before Clients Do",
+        pain: "When a contract is going sideways, the client usually flags it first. Linda is reactive instead of proactive.",
+        fix: "Risk signals — unanswered messages, missed dates, declining health scores — surface to her dashboard before they reach the client.",
+        features: ["Risk Radar", "Early Warning Alerts", "Daily Briefing Email"]
+      }
+    ]
+  }
+};
+
+function showDashboard(key) {
+  const p = PERSONAS[key];
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  const av = document.getElementById('topbar-avatar');
+  av.textContent = p.initials;
+  av.style.background = p.avatarBg;
+
+  document.getElementById('topbar-name').textContent = p.name;
+  document.getElementById('topbar-role').textContent = p.role;
+  document.getElementById('hero-title').textContent = p.heroTitle;
+  document.getElementById('hero-sub').textContent = p.heroSub;
+  document.getElementById('quote').innerHTML = p.quote +
+    `<div class="quote-attr">— ${p.name}, ${p.role}</div>`;
+
+  const summary = document.getElementById('summary');
+  summary.innerHTML = p.summary.map((s, i) =>
+    `<div class="summary-stat"><div class="summary-num">${s.num}</div><div class="summary-label">${s.label}</div></div>` +
+    (i < p.summary.length - 1 ? '<div class="summary-divider"></div>' : '')
+  ).join('');
+
+  const grid = document.getElementById('pain-grid');
+  grid.innerHTML = p.pains.map(pp => `
+    <div class="card">
+      <div class="card-accent"></div>
+      <div class="card-tag">As-Is Pain</div>
+      <h3 class="card-title">${pp.title}</h3>
+      <p class="card-pain">${pp.pain}</p>
+      <div class="card-fix-label">Solved in v3.0</div>
+      <p class="card-fix">${pp.fix}</p>
+      <div>${pp.features.map(f => `<span class="feature-pill">${f}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  window.scrollTo(0, 0);
+}
+
+function backToLogin() {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
